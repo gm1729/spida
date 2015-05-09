@@ -1,0 +1,46 @@
+Current todo list:
+
+  o Modify Lform so numerical variables can be symbolically differentiated: partly done with Lfx
+  o Modify Lform to allow easier differencing of factors: partly done with Lfx
+
+Changes 
+  o Modified 'wald' by adding a 'data' argument that predicts at each value of the data frame and returns a data frame for easy plotting of data and predicted values.
+  o Added 'gpanel.fit' and 'fillin' for easier plots of estimated values and standard error bands.
+  o Added 'tablemissing' from 'tablemissing' no longer on CRAN (2014-09-14, GM)
+  o New functions: 'gd' and 'gd_' replaces 'td' using 'latticeExtra' to create ggplot2-like graphs
+    and give better control over non-group graphical parameters (with gd_) (2014-09-13, GM)
+  o New functions: 'sortdf' and 'assn' are designed to work well in pipelines (see package:magrittr)
+  o Modified 'up' to omit rows with missing values in cluster variables and to detect incorrect combined names when using multiple clustering variables (2014-08-04, GM)
+  o Corrected a bug in tab.formula that changed NAs into other values (2013-11-27, GM)
+  o Lfx improved and may be ready for prime time with <.factor functions (2013-09-16, GM)
+  o getFix.multinom (2013-09-16, GM)
+
+Changes in beta version (2011-02-27 ++):
+
+  o Removed 'nlme' from namespace to avoid conflicts with lme4
+  o Extended gsp to allow periodic splines and global constraints, allowing, for example, a spline to have value 0 beyond boundary knots on the left and on the right. 2013 06 16
+  o Extended gsp to allow periodic splines. 2013 06 16
+  o New method: Lfx
+  o Modified Lform and associated functions M and <.factor etc.
+    to better handle estimation of differences between levels of a
+    factor. (2012-12-03)
+  o Added multresp (2011-12-30)
+  o Added getFix.zeroinfl (2011-11-26)
+  o Added 'weights' for 'tab' (2011-11-26) will add weights as lhs
+  o Added 'gicc' for generalized ICC for multilevel data (2011-03-01)
+  o Tools for effect plots: Leff and related functions  (in Leff.R)
+
+Branch from spida: (2011-02-27)
+
+Further changes:
+	o Modified cLag so it lags correctly within levels of id (2012/04/17-GM)
+ 
+Version 0.1-1 (07-19-2010)
+	o Fixed brace() for R
+	o Begin minor documentation changes
+	o Merged (ell.Rd, ellplus.Rd) -> ell.Rd; (dell.Rd, dellplus.Rd) -> dell.Rd
+	o Fix T/F -> TRUE/FALSE in wald.R, fun.R
+	o Fix getFix.* as S3 methods; merged all getFix.*.Rd -> getFix.Rd
+
+Version 0.1
+	o Initial version on R-Forge
