@@ -16,6 +16,6 @@ Depends: lattice, car, MASS, foreign
 Suggests: Hmisc, magrittr, knitr
 License: GPL (>= 2)
 URL: http://georges.blog.yorku.ca
-LazyLoad: yes
-LazyData: yes
+LazyLoad: no
+LazyData: no
 VignetteBuilder: knitr
