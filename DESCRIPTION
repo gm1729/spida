@@ -12,7 +12,7 @@ Description: Collection of utility functions for mixed models including
    smsp:  tool for smoothing splines with lme and nlme based on lmeSplines
    capply: create contextual variables. Also: cvar, dvar, up, xapply
    Misc:  vif.lme, xqplot, tab, panel.subgroups (additional level of subgroups in xyplot), multresp
-Depends: lattice
+Depends: lattice, car
 Suggests: Hmisc, magrittr, knitr, car, MASS, foreign
 License: GPL (>= 2)
 URL: http://georges.blog.yorku.ca
