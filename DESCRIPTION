@@ -3,19 +3,19 @@ Type: Package
 Title: Collection of miscellaneous functions for mixed models etc. prepared for SPIDA 2009+ (development version)
 Version: 0.1.3.9000
 Date: 2012-10-30
-Author: Georges Monette 
+Author: Georges Monette
 Maintainer: Georges Monette <georges@yorku.ca>
 Description: Collection of utility functions for mixed models including
    wald:  Wald test with functions to generate hypothesis matrices
    gsp:   general spline with any degree and smoothness with additional
-          function 'sc' to contruct hypotheses, 
+          function 'sc' to contruct hypotheses,
    smsp:  tool for smoothing splines with lme and nlme based on lmeSplines
    capply: create contextual variables. Also: cvar, dvar, up, xapply
-   Misc:  vif.lme, xqplot, tab, panel.subgroups (additional level of subgroups in xyplot), multresp 
-Depends: lattice, car, MASS, foreign
-Suggests: Hmisc, magrittr, knitr
+   Misc:  vif.lme, xqplot, tab, panel.subgroups (additional level of subgroups in xyplot), multresp
+Depends: lattice
+Suggests: Hmisc, magrittr, knitr, car, MASS, foreign
 License: GPL (>= 2)
 URL: http://georges.blog.yorku.ca
 LazyLoad: no
-LazyData: no
+LazyData: yes
 VignetteBuilder: knitr
