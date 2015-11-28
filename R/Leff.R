@@ -231,7 +231,7 @@ function (mod, error, singular.ok = TRUE, ...)
         paste("Response:", responseName(mod)))
     result
 }
-environment(Anova2.lme) <- environment(Anova)
+# environment(Anova2.lme) <- environment(Anova)
 
 if(ALL){
     spses <- function( x ) gsp( x, c(-1,0,1), 2,1)[,-1]
