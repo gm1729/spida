@@ -1429,48 +1429,6 @@ dellplus <- function( x, y,  ...) {
 # }
 
 
-old.cell <-
-function (model, which.coef, levels = 0.95, Scheffe = FALSE, dfn = 2,
-    center.pch = 19, center.cex = 1.5, segments = 51, xlab, ylab,
-    las = par("las"), col = palette()[2], lwd = 2, lty = 1,
-    add = FALSE, ...)
-{
-help <- "
-See help for car::confidence.ellipse.lm
-except that 'cell' returns the points to form the ellipse
-which must be plotted with plot(...,type='l') or lines(...)
--- Use dfn to determine Sheffe dimension, i.e. dfn = 1 to generate ordinary CIs, dfn = 2 for 2-dim CE, etc.
-"
-    require(car)
-    which.coef <- if (length(coefficients(model)) == 2)
-        c(1, 2)
-    else {
-        if (missing(which.coef)) {
-            if (has.intercept(model))
-                c(2, 3)
-            else c(1, 2)
-        }
-        else which.coef
-    }
-    coef <- coefficients(model)[which.coef]
-    xlab <- if (missing(xlab))
-        paste(names(coef)[1], "coefficient")
-    ylab <- if (missing(ylab))
-        paste(names(coef)[2], "coefficient")
-    if(missing(dfn)) {
-        if (Scheffe) dfn <- sum(df.terms(model))
-        else 2
-    }
-    dfd <- df.residual(model)
-    shape <- vcov(model)[which.coef, which.coef]
-    ret <- numeric(0)
-    for (level in rev(sort(levels))) {
-        radius <- sqrt(dfn * qf(level, dfn, dfd))
-        ret <- rbind(ret, c(NA,NA), ell( coef, shape, radius) )
-    }
-    colnames(ret) <- c(xlab, ylab)
-    ret
-}
 
 # from Plot3d.R
 
