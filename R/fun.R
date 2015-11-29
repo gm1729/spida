@@ -1,5 +1,3 @@
-
-
 "
 LOG OF CHANGES:
 2014:
@@ -160,6 +158,57 @@ Last uploaded to http://www.math.yorku.ca/~georges/R/fun.R : Auguest 23, 2006
 ##  Crude predict methods for 'mer'  Dec 6, 2008
 ##
 
+
+
+#' A tentative version of predict for mer objects
+#' 
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param model %% ~~Describe \code{model} here~~
+#' @param data %% ~~Describe \code{data} here~~
+#' @param form %% ~~Describe \code{form} here~~
+#' @param verbose %% ~~Describe \code{verbose} here~~
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (model, data = model.matrix(model), form, verbose = FALSE) 
+#' {
+#'     help = "\n    This is a crude predict method for class 'mer'\n    Limitations:\n    1) When invoked on the model it only returns the linear predictor for the\n       complete data. Note that a complete data frame is easily obtained with\n       model.frame( model )\n    2) When the 'data' argument is provided for 'new' data, it is also\n       necessary to provide the correct rhs of the fixed effects formula.\n\n    "
+#'     if (missing(form) & !missing(data)) {
+#'         cat(help)
+#'         stop("Need 'form' if 'data' given")
+#'     }
+#'     if (!missing(data)) {
+#'         data = model.matrix(form, data)
+#'         cnames = colnames(data)
+#'         if (verbose) 
+#'             print(cnames)
+#'         fnames = names(fixef(model))
+#'         if (verbose) 
+#'             print(fnames)
+#'         if (any(cnames != fnames)) {
+#'             cat("\nMatrix names:\n")
+#'             print(cnames)
+#'             cat("\nCoeff names:\n")
+#'             print(fnames)
+#'             warning("matrix and coeff names not the same")
+#'         }
+#'     }
+#'     data %*% fixef(model)
+#'   }
+#' 
+#' @export
 predict.mer <- function( model, data = model.matrix(model), form , verbose = FALSE) {
 
 help   = "
@@ -202,6 +251,43 @@ help   = "
 ##
 
 
+
+
+
+
+#' Conjugate complement of span(X) in span(Z) with respect to inner product ip
+#' 
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param X %% ~~Describe \code{X} here~~
+#' @param Z %% ~~Describe \code{Z} here~~
+#' @param ip %% ~~Describe \code{ip} here~~
+#' @param tol %% ~~Describe \code{tol} here~~
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (X, Z = diag(nrow(X)), ip = diag(nrow(X)), tol = 1e-07) 
+#' {
+#'     help <- "\n    ConjComp returns a basis for the conjugate complement of the\n    conjugate projection of X into span(Z) with respect to inner product with\n    matrix ip.\n    Note: Z is assumed to be of full column rank but not necessarily X.\n    "
+#'     xq <- qr(t(Z) %*% ip %*% X, tol = tol)
+#'     if (xq$rank == 0) 
+#'         return(Z)
+#'     a <- qr.Q(xq, complete = T)[, -(1:xq$rank)]
+#'     Z %*% a
+#'   }
+#' 
+#' @export
 ConjComp <- function( X , Z = diag( nrow(X)) , ip = diag( nrow(X)), tol = 1e-07 ) {
     help <- "
     ConjComp returns a basis for the conjugate complement of the
@@ -216,8 +302,80 @@ ConjComp <- function( X , Z = diag( nrow(X)) , ip = diag( nrow(X)), tol = 1e-07 
     Z %*% a
 }
 
+
+
+#' Orthogonal basis for the orthogonal complement of the column space of a
+#' matrix.
+#' 
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param X %% ~~Describe \code{X} here~~
+#' @param Z %% ~~Describe \code{Z} here~~
+#' @param tol %% ~~Describe \code{tol} here~~
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (X, Z, tol = 1e-07) 
+#' ConjComp(X, Z, tol = tol)
+#' 
+#' @export
 OrthoComp <- function (X, Z , tol = 1e-07) ConjComp( X, Z, tol = tol)
 
+
+
+#' Indicate number of points overplotted
+#' 
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param x %% ~~Describe \code{x} here~~
+#' @param y %% ~~Describe \code{y} here~~
+#' @param \dots %% ~~Describe \code{\dots} here~~
+#' @param verbose %% ~~Describe \code{verbose} here~~
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (x, y, ..., verbose = T) 
+#' {
+#'     pat <- paste(x, y, sep = ",")
+#'     keep <- !duplicated(pat)
+#'     ns <- table(pat)
+#'     ns <- ns[pat[keep]]
+#'     nps <- as.character(ns)
+#'     x <- x[keep]
+#'     y <- y[keep]
+#'     if (verbose) {
+#'         print(pat)
+#'         print(table(pat))
+#'         print(keep)
+#'         print(ns)
+#'     }
+#'     plot(x, y, pch = "o", cex = 5, ...)
+#'     text(x, y, nps)
+#'   }
+#' 
+#' @export
 oplot <- function( x, y, ..., verbose = TRUE) {
     pat <- paste( x, y, sep = ",")
     keep <- !duplicated(pat)
@@ -244,6 +402,35 @@ oplot <- function( x, y, ..., verbose = TRUE) {
 #oplot( c(rep(1,10),2,3,2,1,2,3), c(rep(1,10),2,3,2,1,2,3), type = 'b')
 
   
+
+
+#' Left square root of X'X
+#' 
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param x %% ~~Describe \code{x} here~~
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (x) 
+#' {
+#'     xx <- svd(x)
+#'     ret <- t(xx$v) * sqrt(pmax(xx$d, 0))
+#'     ret
+#'   }
+#' 
+#' @export
 fac <- function(x) {
    xx <- svd(x)
    ret <- t(xx$v) * sqrt(pmax( xx$d,0))
@@ -252,6 +439,36 @@ fac <- function(x) {
 
 
 
+
+
+#' Display the name and value of an object
+#' 
+#' Display the name and value of an object, useful for debugging %% ~~ A
+#' concise (1-5 lines) description of what the function does. ~~
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param x %% ~~Describe \code{x} here~~
+#' @param head %% ~~Describe \code{head} here~~
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (x, head = deparse(substitute(x))) 
+#' {
+#'     cat("\n::: ", head, " :::\n")
+#'     print(x)
+#'   }
+#' 
+#' @export
 disp <- function( x , head = deparse(substitute(x))) {
     # for debugging
     cat("\n::: ", head , " :::\n")
@@ -267,6 +484,45 @@ disp <- function( x , head = deparse(substitute(x))) {
 "
 
 
+
+
+#' Attempt at streamlining expand.grid for prediction
+#' 
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param df %% ~~Describe \code{df} here~~
+#' @param by %% ~~Describe \code{by} here~~
+#' @param \dots %% ~~Describe \code{\dots} here~~
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (df, by, ...) 
+#' {
+#'     dots = list(...)
+#'     by = model.frame(by, df, na.action = na.include)
+#'     byn = names(by)
+#'     names(byn) = byn
+#'     args = lapply(byn, function(x) {
+#'         vv = df[[x]]
+#'         if (is.factor(vv)) 
+#'             levels(vv)
+#'         else unique(vv)
+#'     })
+#'     args = c(args, dots)
+#'     do.call("expand.grid", args)
+#'   }
+#' 
 eg <-
 function( df, by, ...) {
     # a quicker version of expand.grid
@@ -285,6 +541,34 @@ function( df, by, ...) {
 
 
 
+
+
+#' Transform NAs to FALSE
+#' 
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param x %% ~~Describe \code{x} here~~
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (x) 
+#' {
+#'     x[is.na(x)] <- F
+#'     x
+#'   }
+#' 
+#' @export
 na2f <- function(x)  {
     x[is.na(x)] <- FALSE
     x
@@ -298,6 +582,45 @@ na2f <- function(x)  {
 # L <- rbind( c(1,1,1,1), c(0,1,0,0), c(1,0,1,1))
 
 
+
+
+#' Utility function %% ~~function to do ... ~~
+#' 
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param x %% ~~Describe \code{x} here~~
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (x) 
+#' {
+#'     ret <- NULL
+#'     if (is.character(x)) 
+#'         ret <- "it's character"
+#'     else {
+#'         if (is.numeric(x)) {
+#'             if (is.null(dim(x))) {
+#'                 if (length(x) != 4) 
+#'                   ret <- diag(4)[x, ]
+#'                 else ret <- rbind(x)
+#'             }
+#'         }
+#'     }
+#'     ret
+#'   }
+#' 
+#' @export
 tfun <- function( x) {
       ret <- NULL
       if ( is.character(x)) ret <- "it's character"
@@ -316,6 +639,66 @@ tfun <- function( x) {
 ##  Extension of avp from car
 ##
 
+
+
+
+
+#' Create data frame for added variable plot
+#' 
+#' av.frame( model, variable) returns a data frame with model.frame(model)
+#' augmented by y.res and x.res, the residuals for an added variable plot
+#' 
+#' The purpose of this function is to facilitate OLS av.plots for mixed models.
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param model %% ~~Describe \code{model} here~~
+#' @param \dots %% ~~Describe \code{\dots} here~~
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#'        library(nlme)
+#'        library(lattice)
+#'        hs <- read.csv( 'http://www.math.yorku.ca/~georges/Data/hs.csv')
+#' 
+#'        # Mixed model where ses and Sex are Level 1 and Sector is Level 2
+#' 
+#'        fit.mm <- lme( mathach ~ ses * Sex * Sector, hs, random = ~ 1+ses| school)
+#' 
+#'        # for diagnostics fit an OLS model using only level 1 variables interacting
+#'        # with the id variable
+#' 
+#'        fit.ols <- lm( mathach ~ (ses * Sex ) * factor(school), hs)
+#'        xyplot( y.res ~ x.res | factor(school), cbind(av.frame(fit.ols, 'ses:Sex'),hs), sub = 'ses:Sex')
+#'        xyplot( y.res ~ x.res | factor(school), cbind(av.frame(fit.ols, '^Sex'),hs), sub = 'Sex')
+#'        xyplot( y.res ~ x.res | factor(school), cbind(av.frame(fit.ols, '^ses$|^ses:f'),hs), sub = 'ses')
+#' 
+#' 
+#'        Note : y.res is the residual from fitting the response on
+#'               the model matrix for fit.ols omitting any column
+#'               whose names is matched (as a regular expression)
+#'               by 'effect'
+#'               x.res is the residual of the first column of the
+#'               model matrix that is matched by 'effect' on the
+#'               same matrix used for y.res.
+#'        Caution: To make sure that the correct columns were
+#'               matched, the list of matched columns that are omitted
+#'               is printed.
+#' 
+#' ## The function is currently defined as
+#' function (model, ...) 
+#' {
+#'     UseMethod("av.frame")
+#'   }
+#' 
+#' @export
 av.frame <- function( model, ..., help = FALSE) {
 if(help) {
  cat("
@@ -365,6 +748,56 @@ if(help) {
          UseMethod("av.frame")
 }
 
+
+
+
+
+#' lm method for av.frame
+#' 
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param model %% ~~Describe \code{model} here~~
+#' @param variable %% ~~Describe \code{variable} here~~
+#' @param \dots %% ~~Describe \code{\dots} here~~
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (model, variable, ...) 
+#' {
+#'     mod.mat <- model.matrix(model)
+#'     var.names <- colnames(mod.mat)
+#'     omit <- grep(variable, var.names)
+#'     if (0 == length(omit)) 
+#'         stop(paste(variable, "is not matched among columns of the model matrix."))
+#'     cat("x.var =", var.names[omit[1]], "\n", "omitted vars =", 
+#'         var.names[omit[-1]], "\n")
+#'     response <- response(model)
+#'     x.var <- mod.mat[, omit[1]]
+#'     Xpred <- mod.mat[, -omit]
+#'     preds <- predict(update(model, na.action = na.exclude))
+#'     responseName <- responseName(model)
+#'     if (is.null(weights(model))) 
+#'         wt <- rep(1, length(response))
+#'     else wt <- weights(model)
+#'     res <- lsfit(mod.mat[, -omit], cbind(mod.mat[, omit[1]], 
+#'         response), wt = wt, intercept = FALSE)$residuals
+#'     ret <- matrix(NA, nrow = length(preds), ncol = 2)
+#'     ret[!is.na(preds), ] <- res
+#'     data.frame(x.res = ret[, 1], y.res = ret[, 2])
+#'   }
+#' 
+#' @export
 av.frame.lm <- function (model, variable,...){
 # code borrowed from 'car' by J. Fox, function 'av.plot'
 # labels = names(residuals(model)[!is.na(residuals(model))]),
@@ -400,6 +833,68 @@ av.frame.lm <- function (model, variable,...){
 
 
 
+
+
+#' Variance Inflation Factors for Mixed Models
+#' 
+#' Calculates versions of the variance-inflation and generalized
+#' variance-inflation factors for mixed models.
+#' 
+#' The concept of Variance Inflation in linear models can be applied to mixed
+#' models in a number of ways since the variance-covariance matrix of the
+#' estimated fixed coefficients is not simply proportional to the inverse of
+#' the cross-product matrix for the data. This method for the generic function
+#' \code{vif} in the \code{car} package, implements the version based on the
+#' variance-covariance funtion of the estimated fixed coefficients.  Since the
+#' \code{vcov} method is available for \code{lm} objects and \code{lme}
+#' objects, uses the code for the \code{lm} method for \code{lme} objects.
+#' 
+#' @param mod %% ~~Describe \code{mod} here~~
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (mod) 
+#' {
+#'     if (any(is.na(fixef(mod)))) 
+#'         stop("there are aliased coefficients in the model")
+#'     v <- vcov(mod)
+#'     mm <- model.matrix(formula(mod), mod$data)
+#'     assign <- attributes(mm)$assign
+#'     if (names(fixef(mod)[1]) == "(Intercept)") {
+#'         v <- v[-1, -1]
+#'         assign <- assign[-1]
+#'     }
+#'     else warning("No intercept: vifs may not be sensible.")
+#'     terms <- labels(terms(mod))
+#'     n.terms <- length(terms)
+#'     if (n.terms < 2) 
+#'         stop("model contains fewer than 2 terms")
+#'     R <- cov2cor(v)
+#'     detR <- det(R)
+#'     result <- matrix(0, n.terms, 3)
+#'     rownames(result) <- terms
+#'     colnames(result) <- c("GVIF", "Df", "GVIF^(1/2Df)")
+#'     for (term in 1:n.terms) {
+#'         subs <- which(assign == term)
+#'         result[term, 1] <- det(as.matrix(R[subs, subs])) * det(as.matrix(R[-subs, 
+#'             -subs]))/detR
+#'         result[term, 2] <- length(subs)
+#'     }
+#'     if (all(result[, 2] == 1)) 
+#'         result <- result[, 1]
+#'     else result[, 3] <- result[, 1]^(1/(2 * result[, 2]))
+#'     result
+#'   }
+#' 
 "vif.lme" <-
 function (mod)
 {
@@ -455,18 +950,80 @@ function (mod)
 
 
 
+
+
+#' Set lattice parameters for multiple groups
+#' 
+#' Designed to easily sets lattice parameters for multiple groups. Setting
+#' parameters before calling the lattice function allows parameters to be used
+#' consistently in the group key.
+#' 
+#' 'td' calls 'trellis.device' and sets graphical parameters for
+#' 'superpose.line' and 'superpose.symbol'. 'td' also initializes a new trellis
+#' device with a white background if new = TRUE. %% ~~ If necessary, more
+#' details than the description above ~~
+#' 
+#' @aliases td gd
+#' @param n in 'gd' specifies the number of distinct colours to generate to
+#' distinguish groups. 'gd' uses 'latticeExtra' to set defaults for a
+#' ggplot2-like appearance. Default is n = 4
+#' @param new If new = TRUE, open a new window, otherwise modify the existing
+#' active window, if there is one. %% ~~Describe \code{new} here~~
+#' @param col
+#' @param lty
+#' @param lwd
+#' @param pch
+#' @param cex %% ~~Describe \code{col} here~~ vectors for graphical parameters
+#' for each level of the groups variable
+#' @param font %% ~~Describe \code{font} here~~
+#' @param fill %% ~~Describe \code{fill} here~~
+#' @param col.line %% ~~Describe \code{col.line} here~~ line colour if 'groups'
+#' not given
+#' @param col.symbol %% ~~Describe \code{col.symbol} here~~ symbol colour if
+#' 'groups' not given
+#' @param alpha %% ~~Describe \code{alpha} here~~
+#' @param alpha.line %% ~~Describe \code{alpha.line} here~~
+#' @param alpha.symbol graphical parameters for superpose.line and
+#' superpose.symbol %% ~~Describe \code{alpha.symbol} here~~
+#' @param len extend the length of parameters by recycling to lenght 'len' %%
+#' ~~Describe \code{len} here~~
+#' @param long if TRUE generate a default combination of col, lty and pch with
+#' length 42. %% ~~Describe \code{long} here~~
+#' @param record If TRUE, set history to 'recording'. Caution: this can use a
+#' lot of memory in .GlobalEnv.  Consider adding selected graphs to memory with
+#' the 'Insert' key instead. %% ~~Describe \code{record} here~~
+#' @param basecol %% ~~Describe \code{basecol} here~~
+#' @param colsets %% ~~Describe \code{colsets} here~~
+#' @param \dots %% ~~Describe \code{\dots} here~~ use to set any trellis
+#' parameter: e.g. \code{plot.symbol=list(cex=2,col='red')}. Particular useful
+#' for the cex, col, lty, lwd, alpha, pch parameters in plot.line and
+#' plot.symbol.
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' td( lty = 1:7)
+#' 
+#' td( plot.symbol = list(col = 'red', pch = 17))
+#' 
+#' 
+#' 
+#' @export
 td <- function(
     new = FALSE,
     col=c("#0080ff",   "#ff00ff",   "darkgreen", "#ff0000" ,  "orange" ,   "#00ff00",   "brown" ),
     lty=1:7, lwd=1,
 	pch = 1:7, cex = 0.8, font = 1,
-	fill = "transparent",
-	col.line = col,
-	col.symbol = col,
-	alpha = 1,
-	alpha.line = alpha,
-	alpha.symbol = alpha,
-	len = 7,
+
+
+
 	long = FALSE,
 #    record = FALSE, # not supported in RStudio
     basecol = NULL,
@@ -592,6 +1149,7 @@ td <- function(
   invisible(ret[grep('superpose',names(ret))])
 }
 
+#' @export
 gd <-
   function (n=9, 
             col = brewer.pal(n,"Set1"), lty = 1:n, lwd = 1, 
@@ -749,6 +1307,7 @@ gd <-
     invisible(ret[grep("superpose", names(ret))])
   }
 
+#' @export
 gd_ <- function(...) gd(superpose = FALSE, ...)
 
 
@@ -764,6 +1323,61 @@ gd_ <- function(...) gd(superpose = FALSE, ...)
 ###
 
 
+
+
+#' Extended Quantile Plots
+#' 
+#' An easy way to see a dataset's variables at a glance. Shows uniform quantile
+#' plot for numerical varibles and barcharts for factors. Quantile plots also
+#' show a horizontal line at the position of the mean and at mean plus or minus
+#' one standard deviation.
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param x a data frame or list of variables to plot %% ~~Describe \code{x}
+#' here~~
+#' @param ptype "quantile" (default) or "normal": kind of quantile to plot on x
+#' axis. %% ~~Describe \code{ptype} here~~
+#' @param labels names for each plot %% ~~Describe \code{labels} here~~
+#' @param \dots additional arguments passed to 'plot' command %% ~~Describe
+#' \code{\dots} here~~
+#' @param mfrow number of rows and columns per page. If missing, an attempt is
+#' made to choose a reasonable number. %% ~~Describe \code{mfrow} here~~
+#' @param ask %% ~~Describe \code{ask} here~~
+#' @param mcex character expansion factor for marginal text %% ~~Describe
+#' \code{mcex} here~~
+#' @param maxlab maximum number of categories to label in barcharts %%
+#' ~~Describe \code{maxlab} here~~
+#' @param debug if TRUE, print additional information %% ~~Describe
+#' \code{debug} here~~
+#' @param mar size of margins
+#' 
+#' %% ~~Describe \code{mar} here~~
+#' @param text.cex.factor character expansion factor for barchart labels %%
+#' ~~Describe \code{text.cex.factor} here~~
+#' @param left.labs determines placement of barchart labels %% ~~Describe
+#' \code{left.labs} here~~
+#' @param maxvarnamelength maximum length of variable name without splitting on
+#' two lines. %% ~~Describe \code{maxvarnamelength} here~~
+#' @note Bugs:
+#' 
+#' 'mfrow' should take the total number of variables into account if they will
+#' fill more than one page so the last page is close to being full.
+#' 
+#' The current version of the function could be made much simpler and more
+#' transparent. Some code is redundant.
+#' @author Georges Monette <georges@@yorku.ca>
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' require(car)
+#' xqplot(Prestige)
+#' xqplot(Prestige,"n") # normal quantiles
+#' 
+#' 
+#' @export
 xqplot <- function(x, 
                     ptype = "quantile", 
                     labels = dimnames(x)[[2]], ..., 
@@ -992,6 +1606,68 @@ Modifications:
 
 
 
+
+
+#' Show characters, colours, etc.
+#' 
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param n %% ~~Describe \code{n} here~~
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (n = 24) 
+#' {
+#'     old.par <- par(ask = T)
+#'     on.exit(par(old.par))
+#'     require(lattice)
+#'     y <- 0:n
+#'     x <- 0:n
+#'     print(xyplot(y ~ x, type = "n", xlab = "lty", ylab = "col", 
+#'         panel = function(x, y, ...) {
+#'             for (i in x) {
+#'                 panel.xyplot(c(i, i), range(y), type = "l", lty = i, 
+#'                   col = 1, lwd = 3)
+#'             }
+#'             for (i in y) {
+#'                 for (j in seq(0, 0.9, by = 0.1)) {
+#'                   panel.xyplot(c(min(x) + j * (max(x) - min(x)), 
+#'                     min(x) + (j + 0.1) * (max(x) - min(x))), 
+#'                     c(i, i), type = "l", lty = 1, col = i, lwd = 3)
+#'                 }
+#'             }
+#'         }))
+#'     spl <- trellis.par.get("superpose.line")
+#'     z <- expand.grid(y = 1:length(spl$lty), x = 0:2)
+#'     print(xyplot(y ~ x, z, ylim = c(0, length(spl$lty)), groups = y, 
+#'         type = "b", main = "superpose.line and .symbol"))
+#'     y <- 10 * (0:25)
+#'     x <- 0:9
+#'     print(xyplot(y ~ x, type = "n", main = "pch", xlab = expression(~alpha + 
+#'         beta + gamma + delta[epsilon] + zeta^eta + theta + iota + 
+#'         kappa), ylab = expression(~lambda + mu + nu + xi + omicron + 
+#'         pi + rho + sigma + tau + upsilon + phi + chi + psi + 
+#'         omega), panel = function(x, y, ...) {
+#'         for (i in x) {
+#'             for (j in y) {
+#'                 panel.xyplot(i, j, pch = i + j, cex = 2)
+#'             }
+#'         }
+#'     }))
+#'     invisible(0)
+#'   }
+#' 
 sampler <-
     function( n=24 ) {
     # sample of lines and symbols
@@ -1036,6 +1712,47 @@ sampler <-
      invisible(0)
 }
 
+
+
+#' Generate a palette of colours -- possibly superseded
+#' 
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param col %% ~~Describe \code{col} here~~
+#' @param border %% ~~Describe \code{border} here~~
+#' @param \dots %% ~~Describe \code{\dots} here~~
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (col = c("blue", "pink"), border = "light gray", ...) 
+#' {
+#'     n <- length(col)
+#'     plot(0, 0, type = "n", xlim = c(0, 1), ylim = c(0, 1), axes = FALSE, 
+#'         xlab = "", ylab = "", ...)
+#'     rect(0, 0:(n - 1)/n, 0.6, 1:n/n, col = col, border = border)
+#'     ret <- col2rgb(col)
+#'     dimnames(ret)[[2]] <- col
+#'     ret <- t(ret)
+#'     txt <- paste(as.character(col), "(", apply(ret, 1, paste, 
+#'         collapse = " "), ")")
+#'     text(rep(0.6, n), (0:(n - 1) + 0.5)/n, txt, adj = 0)
+#'     ret <- col2rgb(col)
+#'     dimnames(ret)[[2]] <- col
+#'     t(ret)
+#'   }
+#' 
+#' @export
 pal <- function(col=c('blue','pink'), border = "light gray", ...) {
      n <- length(col)
      plot(0, 0, type = "n", xlim = c(0, 1), ylim = c(0, 1), axes = FALSE,
@@ -1053,6 +1770,38 @@ pal <- function(col=c('blue','pink'), border = "light gray", ...) {
 }
 
 
+
+
+#' Display colors n at a time
+#' 
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param pp %% ~~Describe \code{pp} here~~
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (pp = 30) 
+#' {
+#'     n <- length(cc <- colors())
+#'     ii <- 1
+#'     while (ii < n) {
+#'         pal(cc[ii:min(ii + pp, n)], ask = T)
+#'         ii <- ii + pp + 1
+#'     }
+#'   }
+#' 
+#' @export
 pals <- function(pp=30){
     n <- length(cc <- colors())
     ii <- 1
@@ -1078,6 +1827,40 @@ if ( FALSE ){
 
 
 
+
+
+
+
+#' Replace elements of x with correspondingly named elements of ll
+#' 
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param x %% ~~Describe \code{x} here~~
+#' @param ll %% ~~Describe \code{ll} here~~
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (x, ll) 
+#' {
+#'     nams <- names(ll)
+#'     for (ii in seq_along(ll)) {
+#'         x[[nams[ii]]] <- ll[[ii]]
+#'     }
+#'     x
+#'   }
+#' 
+#' @export
 change <- function(x,ll) {
     #
     # Modifies elements in a list
@@ -1091,6 +1874,91 @@ change <- function(x,ll) {
 }
 
 
+
+
+#' Panel function to display subgroups within groups within panels
+#' 
+#' This function is designed to be used as the argument to \code{panel.groups}
+#' in \code{xyplot}. It effectively adds another level of subgrouping to that
+#' implemented by the \code{groups} argument in \code{xyplot}.  Useful mainly
+#' to display data and fitted lines in groups within panels.
+#' 
+#' This function is designed to be used as the argument to 'panel.groups' in
+#' 'xyplot'. It allows the plotting of points versus lines within subgroups of
+#' the data identified by the 'groups' argument in xyplot.  It requires a
+#' variable to identify the subgroups. Points or lines are used within
+#' subgroups depending on 'subgroups.type' where the order is that of the
+#' levels of the 'subgroups' argument coerced as a factor, if necessary.  See
+#' the examples below.
+#' 
+#' @param x,y coordinates of the points to be displayed
+#' @param subscripts subscripts giving indices in original data frame
+#' @param subgroups a subgrouping variable. Use a full reference, e.g.
+#' data$subvar
+#' @param subgroups.type plotting type, typically 'p' or 'l', for each level of
+#' the variable passed through the \code{subgroups} argument
+#' @param type %% ~~Describe \code{type} here~~
+#' @param panel.subgroups function use to plot data within in each group
+#' referring to the levels of the variable passed by \code{subgroups}.  Define
+#' a \code{panel.subgroups} argument in the call to \code{xyplot} and it will
+#' be used to plot the groups. See the examples below.
+#' @param \dots any other arguments to be passed to the panel plotting function
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso \code{link{lattice::panel.superpose}},
+#' \code{link{lattice::panel.superpose.2}}, \code{link{lattice::panel.xyplot}}
+#' %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#'      library(car)
+#'      data(Prestige)
+#'      fit <- lm( prestige ~ (education +I(education^2)) * type, Prestige, na.action = na.omit)
+#'      pred <- expand.grid( education = seq( 6, 18, .5), type = levels( Prestige$type))
+#'      pred$prestige <- predict( fit, newdata = pred )
+#' 
+#'      Prestige$what <- 'data'
+#'      pred$what <- 'fit'         # this works because 'fit' follows 'data' lexicographically
+#' 
+#'      combined <- merge( Prestige, pred, all = T)
+#' 
+#'      xyplot( prestige ~ education, combined,
+#'           groups = type,
+#'           subgroups = combined$what,  # note that a full reference to the variable is needed
+#'           panel = panel.superpose,    # might not be necessary in future version of lattice
+#'           panel.groups = panel.subgroups)  # uses the default of points for the first level of 'what'
+#'                                            # and lines for the second level
+#' 
+#'      ## Using the argument 'panel.subgroups' instead of the default 'panel.xyplot'
+#'      ## Note that panel.subgroups is a function (this one) and also an argument that
+#'      ## is a function passed to the function. The argument defines the action to
+#'      ## be taken within each level of 'what'
+#'      
+#'      xyplot( prestige ~ education, combined,
+#'           groups = type,
+#'           subgroups = combined$what,  # note that a full reference to the variable is needed
+#'           panel = panel.superpose,    # might not be necessary in future version of lattice
+#'           panel.groups = panel.subgroups,
+#'           panel.subgroups = function( x, y, subgroup, type, ...) {
+#'              # note that you need to include 'type' among the arguments
+#'              # if you need to prevent it from being passed through '...'
+#'              # When called, this function will be passed arguments
+#'              # subgroup, subgroup.number, subscripts, and type from
+#'              # subgroups.type.
+#'              if ( subgroup == 'data' ) {
+#'                 panel.xyplot( x, y, ...)
+#'                 panel.lines( dell(x,y), ...)
+#'              }
+#'              else {
+#'                 panel.lines( x,y, ...)
+#'              }
+#'           })
+#' 
+#' @export
 panel.subgroups <- function( x, y, subscripts,
      subgroups, subgroups.type = c('p','l'),type,
      panel.subgroups = panel.xyplot, ...) {
@@ -1123,6 +1991,74 @@ help = "Use help: ?panel.subgroups"
 
 ### atotal
 
+
+
+
+
+#' Add all marginal sums to an array
+#' 
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param arr %% ~~Describe \code{arr} here~~
+#' @param FUN %% ~~Describe \code{FUN} here~~
+#' @param label %% ~~Describe \code{label} here~~
+#' @param \dots %% ~~Describe \code{\dots} here~~
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso \code{\link{tab}}, \code{\link{acond}} %% ~~objects to See Also as
+#' \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (arr, FUN = sum, label = "Total", ...) 
+#' {
+#'     help <- "\natotal                coursefun.R     for PSYC 6140/MATH 6630 05/06\n\nAdds border of sums to an array\n\nDescription:\n\n     'atotal' adds by default a border of sums to an array.\n     The function FUN may be used instead of 'sum'. Additional\n     arguments to FUN can also be given.\n\nUsage:\n\n     atotal( arr , FUN = sum, label = 'Total', ...)\n\nArguments:\n\n     arr: array, matrix or vector\n\n     FUN: function to be applied to cross sections of arr\n\n     ...: additional arguments to FUN\n\nDetails:\n\nValue:\n\n     An array with dimension dim(arr) + 1\n\nReferences:\n\nContributed by:  G. Monette  2005-10-10\n\nModifications:\n     2007-12-17: Fixed bug so dimnames is preserved for one-dimensional tables\n\n"
+#'     d <- dim(arr)
+#'     cls <- class(arr)
+#'     dim1 <- FALSE
+#'     if (length(d) == 1) {
+#'         dim1 <- TRUE
+#'         dn <- dimnames(arr)
+#'         arr <- c(arr)
+#'         d <- dim(arr)
+#'     }
+#'     if (is.character(FUN)) 
+#'         FUN <- get(FUN, mode = "function")
+#'     else if (mode(FUN) != "function") {
+#'         farg <- substitute(FUN)
+#'         if (mode(farg) == "name") 
+#'             FUN <- get(farg, mode = "function")
+#'         else stop(paste("\"", farg, "\" is not a function", sep = ""))
+#'     }
+#'     if (is.null(d)) {
+#'         ret <- structure(c(arr, FUN(arr, ...)), names = c(names(arr), 
+#'             label), class = cls)
+#'         if (dim1) {
+#'             dn[[1]] <- c(dn[[1]], label)
+#'             ret <- structure(ret, dim = length(ret), dimnames = dn)
+#'         }
+#'         return(ret)
+#'     }
+#'     n <- length(d)
+#'     ret <- arr
+#'     ind <- 1:n
+#'     for (i in n:1) {
+#'         new <- apply(ret, ind[-i], FUN, ...)
+#'         ret <- abind(ret, new, i, label)
+#'     }
+#'     class(ret) <- cls
+#'     ret
+#'   }
+#' 
+#' @export
 atotal <- function(arr, FUN = sum, label = 'Total', ...) {
 help <- "
 atotal                coursefun.R     for PSYC 6140/MATH 6630 05/06
@@ -1161,6 +2097,34 @@ Modifications:
      2007-12-17: Fixed bug so dimnames is preserved for one-dimensional tables
 
 "
+
+
+
+
+#' Differentiate with 0th order
+#' 
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param ex %% ~~Describe \code{ex} here~~
+#' @param xv %% ~~Describe \code{xv} here~~
+#' @param i %% ~~Describe \code{i} here~~
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (ex, xv, i) 
+#' if (i == 0) ex else D(d(ex, xv, i - 1), xv)
+#' 
 	d <- dim(arr)
 	cls <- class(arr)
 	dim1 <- FALSE  # to handle 1-dimensional tables
@@ -1210,6 +2174,87 @@ Modifications:
 ###
 
 
+
+
+
+
+#' Bind comformable arrays
+#' 
+#' Bind comformable arrays
+#' 
+#' \code{abind} binds two conformable arrays along a dimension.
+#' \code{abind.rdc} is a version used in the RDC.
+#' 
+#' dim( arr1 ) and dim( arr2 ) must be equal except in the dth dimension. If
+#' the length of dim( arr2 ) is 1 less than that of dim( arr1 ), then 'arr2' is
+#' treated as if it had dropped the dth dimension with size 1.
+#' 
+#' @aliases abind abind.rdc
+#' @param arr1 first array
+#' @param arr2 second array
+#' @param d dimension along which arr1 and arr2 are joined, or, if the
+#' \code{length(dim(arr1)) == length(dim(arr2)) + 1} the dimension in arr1 that
+#' is extended by arr2.
+#' @param facename Name for the new array dimension
+#' @return The returned value, ret, is an array with dimension dim(arr1) except
+#' for the dth dimension where dim(ret)[d] == dim(arr1)[d] + dim(arr2)[d].
+#' 
+#' If length(dim(arr2)) == length(dim(arr1)) - 1, then arr2 is treated as if it
+#' dropped a dimension of size 1 in the dth dimension. 'facename' is used as
+#' the name of the dimnames list for this dimension.
+#' @author Georges Monette
+#' @seealso \code{\link[base]{aperm}}, to permute arrays
+#' @keywords manip array
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (arr1, arr2, d, facename = "") 
+#' {
+#'     d1 <- dim(arr1)
+#'     n1 <- length(d1)
+#'     dn1 <- dimnames(arr1)
+#'     d2 <- dim(arr2)
+#'     n2 <- length(d2)
+#'     dn2 <- dimnames(arr2)
+#'     arenull <- is.null(dn1) & is.null(dn2)
+#'     if (is.null(dn1)) {
+#'         dn1 <- lapply(as.list(d1), function(x) seq(1, x))
+#'         dimnames(arr1) <- dn1
+#'     }
+#'     if (n1 != n2) {
+#'         d2 <- d1
+#'         d2[d] <- 1
+#'         dn2 <- dn1
+#'         dn2[[d]] <- facename
+#'         dimnames(arr2) <- NULL
+#'         dim(arr2) <- d2
+#'         dimnames(arr2) <- dn2
+#'         n2 <- n1
+#'     }
+#'     if (is.null(dn2)) {
+#'         dn2 <- lapply(as.list(d2), function(x) seq(1, x))
+#'         dimnames(arr2) <- dn2
+#'     }
+#'     perm <- 1:n1
+#'     perm[c(d, n1)] <- c(n1, d)
+#'     arr.p1 <- aperm(arr1, perm)
+#'     arr.p2 <- aperm(arr2, perm)
+#'     dret <- d1[perm]
+#'     dret[n1] <- dret[n1] + d2[d]
+#'     dnret <- dn1
+#'     dnret[[d]] <- c(dnret[[d]], dn2[[d]])
+#'     ret <- c(arr.p1, arr.p2)
+#'     dim(ret) <- dret
+#'     ret <- aperm(ret, perm)
+#'     dimnames(ret) <- dnret
+#'     ret
+#'   }
+#' 
+#' @export
 abind <- function(arr1,arr2,d,facename="") {
 
 help <- "
@@ -1333,6 +2378,39 @@ Modifications:
 ###
 
 
+
+
+#' otab
+#' 
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param \dots %% ~~Describe \code{\dots} here~~
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (...) 
+#' {
+#'     aa <- list(...)
+#'     if (length(aa) == 1 && is.list(aa[[1]])) {
+#'         return(do.call("tab", aa[[1]]))
+#'     }
+#'     for (ii in 1:length(aa)) aa[[ii]] <- factor(aa[[ii]], exclude = NULL)
+#'     ret <- do.call("table", aa)
+#'     ret
+#'   }
+#' 
+#' @export
 otab <- function(...) {
 help <- "
 abind                fun.R     for PSYC 6140/MATH 6630 05/06
@@ -1384,6 +2462,7 @@ Modifications:
 == Ellipses: data and confidence ==
 <pre>"
 
+#' @export
 ellplus <- function ( center = rep(0,2), shape = diag(2), radius = 1, n = 100,
                angles = (0:n)*2*pi/n,
                fac = chol ,
@@ -1413,6 +2492,7 @@ ellplus <- function ( center = rep(0,2), shape = diag(2), radius = 1, n = 100,
     }
 
 
+#' @export
 dellplus <- function( x, y,  ...) {
     if ( (is.matrix(x) && (ncol(x) > 1))|| is.data.frame(x)) mat <- as.matrix(x[,1:2])
     else if (is.list(x)) mat <- cbind(x$x, x$y)
@@ -1430,10 +2510,172 @@ dellplus <- function( x, y,  ...) {
 
 
 
+
+#' Old confidence ellipse
+#' 
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param model %% ~~Describe \code{model} here~~
+#' @param which.coef %% ~~Describe \code{which.coef} here~~
+#' @param levels %% ~~Describe \code{levels} here~~
+#' @param Scheffe %% ~~Describe \code{Scheffe} here~~
+#' @param dfn %% ~~Describe \code{dfn} here~~
+#' @param center.pch %% ~~Describe \code{center.pch} here~~
+#' @param center.cex %% ~~Describe \code{center.cex} here~~
+#' @param segments %% ~~Describe \code{segments} here~~
+#' @param xlab %% ~~Describe \code{xlab} here~~
+#' @param ylab %% ~~Describe \code{ylab} here~~
+#' @param las %% ~~Describe \code{las} here~~
+#' @param col %% ~~Describe \code{col} here~~
+#' @param lwd %% ~~Describe \code{lwd} here~~
+#' @param lty %% ~~Describe \code{lty} here~~
+#' @param add %% ~~Describe \code{add} here~~
+#' @param \dots %% ~~Describe \code{\dots} here~~
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (model, which.coef, levels = 0.95, Scheffe = FALSE, 
+#'     dfn = 2, center.pch = 19, center.cex = 1.5, segments = 51, 
+#'     xlab, ylab, las = par("las"), col = palette()[2], lwd = 2, 
+#'     lty = 1, add = FALSE, ...) 
+#' {
+#'     help <- "\nSee help for car::confidence.ellipse.lm\nexcept that 'cell' returns the points to form the ellipse\nwhich must be plotted with plot(...,type='l') or lines(...)\n-- Use dfn to determine Sheffe dimension, i.e. dfn = 1 to generate ordinary CIs, dfn = 2 for 2-dim CE, etc.\n"
+#'     require(car)
+#'     which.coef <- if (length(coefficients(model)) == 2) 
+#'         c(1, 2)
+#'     else {
+#'         if (missing(which.coef)) {
+#'             if (has.intercept(model)) 
+#'                 c(2, 3)
+#'             else c(1, 2)
+#'         }
+#'         else which.coef
+#'     }
+#'     coef <- coefficients(model)[which.coef]
+#'     xlab <- if (missing(xlab)) 
+#'         paste(names(coef)[1], "coefficient")
+#'     ylab <- if (missing(ylab)) 
+#'         paste(names(coef)[2], "coefficient")
+#'     if (missing(dfn)) {
+#'         if (Scheffe) 
+#'             dfn <- sum(df.terms(model))
+#'         else 2
+#'     }
+#'     dfd <- df.residual(model)
+#'     shape <- vcov(model)[which.coef, which.coef]
+#'     ret <- numeric(0)
+#'     for (level in rev(sort(levels))) {
+#'         radius <- sqrt(dfn * qf(level, dfn, dfd))
+#'         ret <- rbind(ret, c(NA, NA), ell(coef, shape, radius))
+#'     }
+#'     colnames(ret) <- c(xlab, ylab)
+#'     ret
+#'   }
+#' 
+old.cell <-
+function (model, which.coef, levels = 0.95, Scheffe = FALSE, dfn = 2,
+    center.pch = 19, center.cex = 1.5, segments = 51, xlab, ylab,
+    las = par("las"), col = palette()[2], lwd = 2, lty = 1,
+    add = FALSE, ...)
+{
+help <- "
+See help for car::confidence.ellipse.lm
+except that 'cell' returns the points to form the ellipse
+which must be plotted with plot(...,type='l') or lines(...)
+-- Use dfn to determine Sheffe dimension, i.e. dfn = 1 to generate ordinary CIs, dfn = 2 for 2-dim CE, etc.
+"
+    require(car)
+    which.coef <- if (length(coefficients(model)) == 2)
+        c(1, 2)
+    else {
+        if (missing(which.coef)) {
+            if (has.intercept(model))
+                c(2, 3)
+            else c(1, 2)
+        }
+        else which.coef
+    }
+    coef <- coefficients(model)[which.coef]
+    xlab <- if (missing(xlab))
+        paste(names(coef)[1], "coefficient")
+    ylab <- if (missing(ylab))
+        paste(names(coef)[2], "coefficient")
+    if(missing(dfn)) {
+        if (Scheffe) dfn <- sum(df.terms(model))
+        else 2
+    }
+    dfd <- df.residual(model)
+    shape <- vcov(model)[which.coef, which.coef]
+    ret <- numeric(0)
+    for (level in rev(sort(levels))) {
+        radius <- sqrt(dfn * qf(level, dfn, dfd))
+        ret <- rbind(ret, c(NA,NA), ell( coef, shape, radius) )
+    }
+    colnames(ret) <- c(xlab, ylab)
+    ret
+}
+
 # from Plot3d.R
 
 
 
+
+
+#' Calculate coordinates of a data ellipse
+#' 
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~
+#' \code{dell} to calculates the coordinates of a 2D data ellipse
+#' (concentration ellipse) from (X, Y) variables.
+#' 
+#' \code{dellplus} can produce, in addition to the points of an ellipse, the
+#' conjugate axes corresponding to a \code{chol} or other decomposition and the
+#' surrounding parallelogram defined by these axes.
+#' 
+#' These functions simply calculate the mean vector and covariance matrix and
+#' call \code{ell} or \code{ellplus}.
+#' 
+#' @aliases dell dellplus
+#' @param x,y Either a two-column matrix or numeric vectors of the same length
+#' @param radius Radius of the ellipse-generating unit circle.  The default,
+#' \code{radius=1} corresponds to a "standard" ellipse.
+#' @param \dots Other arguments passed down to \code{ell} or \code{ellplus}.
+#' @return Returns a 2-column matrix of (X,Y) coordinates suitable for drawing
+#' with \code{lines()}.
+#' 
+#' For \code{dellplus}, when more than one of the options \code{ellipse},
+#' \code{diameters}, and \code{box} is \code{TRUE}, the different parts are
+#' separated by a row of \code{NA}.
+#' @author Georges Monette
+#' @seealso \code{\link{cell}}, \code{\link{ell}}, \code{\link{ellplus}},
+#' @references Monette, G. (1990). Geometry of Multiple Regression and
+#' Interactive 3-D Graphics. In Fox, J. & Long, S. (ed.)  \emph{Modern Methods
+#' of Data Analysis}, Sage Publications, 209-256.
+#' @keywords dplot aplot
+#' @examples
+#' 
+#' data(Prestige)   # from car
+#' attach(Prestige)
+#' fit.simple <- lm( prestige ~ education, Prestige)
+#' 
+#' plot(prestige ~ education, type='p')
+#' lines(dell(education, prestige), col="blue", lwd=3)
+#' lines(bbox <- dellplus(education, prestige, box=TRUE))
+#' lines(dellplus(education, prestige, diameter=TRUE, radius=2), col="gray")
+#' detach(Prestige)
+#' 
+#' 
+#' @export
     dell <- function( x, y, radius = 1, ...) {
         if ( (is.matrix(x) && (ncol(x) > 1))|| is.data.frame(x)) mat <- as.matrix(x[,1:2])
         else if (is.list(x)) mat <- cbind(x$x, x$y)
@@ -1444,6 +2686,76 @@ dellplus <- function( x, y,  ...) {
 
 
 
+
+
+#' Calculate coordinates of an ellipse
+#' 
+#' \code{ell} is a utility function used to calculate the (X, Y) coordinates of
+#' a 2D ellipse for the purpose of drawing statistical diagrams and plots.
+#' 
+#' \code{ellplus} can produce, in addition to the points of an ellipse, the
+#' conjugate axes corresponding to a \code{chol} or other decomposition and the
+#' surrounding parallelogram defined by these axes.
+#' 
+#' 
+#' @aliases ell ellplus
+#' @param center X,Y location of the center of the ellipse
+#' @param shape A 2x2 matrix, typically a covariance matrix of data (for a data
+#' ellipse), or a covariance matrix of estimated parameters in a model (for a
+#' confidence ellipse).
+#' @param radius Radius of the ellipse-generating unit circle.  The default,
+#' \code{radius=1} corresponds to a "standard" ellipse.
+#' @param n Number of points on the unit circle used to calculate the ellipse
+#' @param angles Angles around the unit circle used to calculate the ellipse
+#' @param fac A function defining the conjugate axes used to transform the unit
+#' circle into an ellipse.  The default, \code{chol}, uses the right Cholesky
+#' factor of \code{shape}.
+#' @param ellipse Logical to indicate if the points on the ellipse should be
+#' returned
+#' @param diameters Logical to indicate if the points defining the ends of the
+#' conjugate axes of the ellipse should be returned
+#' @param box Logical to indicate if the points on the conjugate-axes bounding
+#' box should be returned
+#' @param all Logical to request all of \code{ellipse}, \code{diameters} and
+#' \code{box}. If \code{FALSE}, only the components specified separately by
+#' \code{ellipse}, \code{diameters} and \code{box} are returned.
+#' @return Returns a 2-column matrix of (X,Y) coordinates suitable for drawing
+#' with \code{lines()}.
+#' 
+#' For \code{ellplus}, when more than one of the options \code{ellipse},
+#' \code{diameters}, and \code{box} is \code{TRUE}, the different parts are
+#' separated by a row of \code{NA}.
+#' @author Georges Monette
+#' @seealso \code{\link{cell}}, \code{\link{dell}}, \code{\link{dellplus}},
+#' @keywords dplot aplot
+#' @examples
+#' 
+#' plot( x=0,y=0, xlim = c(-3,3), ylim = c(-3,3),
+#'       xlab = '', ylab = '', type = 'n', asp=1)
+#' abline( v=0, col="gray")
+#' abline( h=0, col="gray")
+#' A <- cbind( c(1,2), c(1.5,1))
+#' W <- A %*% t(A)    
+#'     
+#' lines( ell(center=c(0,0), shape = W ), col = 'blue', lwd=3)
+#' lines( ellplus(center=c(0,0), shape = W, box=TRUE, diameters=TRUE ), col = 'red')
+#' 
+#' # show conjugate axes for PCA factorization
+#' pca.fac <- function(x) {
+#'     xx <- svd(x)
+#'     ret <- t(xx$v) * sqrt(pmax( xx$d,0))
+#'     ret 
+#' }
+#' 
+#' plot( x=0,y=0, xlim = c(-3,3), ylim = c(-3,3),
+#'       xlab = '', ylab = '', type = 'n', asp=1)
+#' abline( v=0, col="gray")
+#' abline( h=0, col="gray")
+#' lines( ell(center=c(0,0), shape = W ), col = 'blue', lwd=3)
+#' lines( ellplus(center=c(0,0), shape = W, box=TRUE, diameters=TRUE, fac=pca.fac ), col = 'red')
+#' 
+#' 
+#' @export
     ell <- function( center = rep(0,2) , shape = diag(2), radius  = 1, n =100) {
           fac <- function( x )  {
               # fac(M) is a 'right factor' of a positive semidefinite M
@@ -1465,20 +2777,143 @@ dellplus <- function( x, y,  ...) {
     }
 
 
+
+
+
+
+#' Centre of an object
+#' 
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param obj %% ~~Describe \code{obj} here~~
+#' @param \dots %% ~~Describe \code{\dots} here~~
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (obj, ...) 
+#' UseMethod("center")
+#' 
+#' @export
     center <- function( obj, ... ) UseMethod("center")
 
+
+
+
+
+#' Center of an ellipse
+#' 
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param obj %% ~~Describe \code{obj} here~~
+#' @param \dots %% ~~Describe \code{\dots} here~~
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (obj, ...) 
+#' attr(obj, "parms")$center
+#' 
+#' @export
     center.ell <- function( obj, ...) attr(obj, 'parms') $ center
 
 
 # line between two ellipsoids ( would like to extend to cylinders)
 
 
+
+
+#' %% ~~function to do ... ~~ Locus of osculation between two families of
+#' ellipses
+#' 
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~
+#' Generates points on the curve of osculation between the centers of two
+#' families of ellipses
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @aliases osculant.default osculant
+#' @param center1 %% ~~Describe \code{center1} here~~ of first family of
+#' ellipses.
+#' @param shape1 %% ~~Describe \code{shape1} here~~ (i.e. 'variance matrix') of
+#' first family of ellipses.
+#' @param center2 of second family. %% ~~Describe \code{center2} here~~
+#' @param shape2 %% ~~Describe \code{shape2} here~~ of second family.
+#' @param n n + 1 is the number of points to generate along the locus. \code{n
+#' = 1} generates the two centers, \code{n=0} generates to point on the first
+#' ellipse that lines on the locus of osculation provided the centre of the
+#' second family lines outside the first ellipse. %% ~~Describe \code{n} here~~
+#' @param range of values of \code{u} to use to generate points. (See the
+#' algorithm in the code)
+#' @note %% ~~further notes~~
+#' @author Georges Monette (georges@@yorku.ca) %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' \code{\link{cell}}, \code{\link{dell}},
+#' \code{\link{ellplus}},\code{\link{dellplus}},
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ellipse ellipse geometry
+#' @examples
+#' 
+#' v1 <- 36*diag(2)
+#' v2 <- .5 * (diag(2) - .4)
+#' v2[2,2] <- 2
+#' plot( 0:10,0:10,type = 'n')
+#' lines( ell( c(2,2), v1))
+#' lines( ell( c(4,4), v2), col = 'red')
+#' osculant(  c(2,2), v1, c(4,4), v2, n = 3)
+#' osculant(  c(2,2), v1, c(4,4), v2, n = 1)
+#' lines( osculant( c(2,2), v1, c(4,4), v2), col = 'red')
+#' 
+#' lines( ell( c(8,8), v2), col = 'blue')
+#' lines( osculant( c(2,2), v1, c(8,8), v2), col = 'blue')
+#' points( osculant( c(2,2), v1, c(8,8), v2, n=1),pch = 16, col = 'blue')
+#' points( osculant( c(2,2), v1, c(8,8), v2, n=0),pch = 16, col = 'blue')
+#' points( osculant( c(8,8), v2, c(2,2), v1,  n=0),pch = 16, col = 'blue')
+#' 
+#' 
+#' @export
 osculant <- function(x, ...) UseMethod("osculant")
 
 osculant.default <- function( center1, shape1, center2, shape2, n = 100, range =c(0,1), maxu = 100) {
 # Use solution from Lagrangean:
 # p = ( shape1^-1 + lam * shape1^-1)^-1 %*% lam2 shape2^-1 delta
     pt <- function(u)  u* solve( u*diag(p) + (1-u)* shape, delta) 
+
+
+#' p - quick paste with sep = ''
+#' 
+#' Works like \code{paste}, using an empty separator string.
+#' 
+#' 
+#' @param \dots one or more R objects, to be converted to character vectors.
+#' @return A character vector of the concatenated values.
+#' @author Georges Monette
+#' @seealso \code{\link[base]{paste}}
+#' @keywords manip
+#' @examples
+#' 
+#' p(letters[1:5], 1:5)
+#' 
     p <- nrow(shape1)
     delta <- center2 - center1
     shape <- t(solve(shape1,shape2))
@@ -1522,6 +2957,36 @@ osculant.default <- function( center1, shape1, center2, shape2, n = 100, range =
 # 
 
 
+
+
+
+
+#' Confidence ellipse
+#' 
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param \dots %% ~~Describe \code{\dots} here~~
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (...) 
+#' {
+#'     UseMethod("cell")
+#'     help <- "\n        See help for car::confidence.ellipse.lm\n        except that 'cell' returns the points to form the ellipse\n        which must be plotted with plot(...,type='l') or lines(...)\n        -- Use dfn to determine Sheffe dimension, i.e. dfn = 1 to generate ordinary CIs, dfn = 2 for 2-dim CE, etc.\n        -- TODO: extend to 3 dimensions if which.coef has length 3\n        "
+#'   }
+#' 
+#' @export
 cell <- function( ... )  {
         UseMethod("cell")
         help <- "
@@ -1559,6 +3024,77 @@ cell.wald <-
 }
 
 
+
+
+
+
+#' Confidence ellipse
+#' 
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param model %% ~~Describe \code{model} here~~
+#' @param which.coef %% ~~Describe \code{which.coef} here~~
+#' @param levels %% ~~Describe \code{levels} here~~
+#' @param Scheffe %% ~~Describe \code{Scheffe} here~~
+#' @param dfn %% ~~Describe \code{dfn} here~~
+#' @param center.pch %% ~~Describe \code{center.pch} here~~
+#' @param center.cex %% ~~Describe \code{center.cex} here~~
+#' @param segments %% ~~Describe \code{segments} here~~
+#' @param xlab %% ~~Describe \code{xlab} here~~
+#' @param ylab %% ~~Describe \code{ylab} here~~
+#' @param las %% ~~Describe \code{las} here~~
+#' @param col %% ~~Describe \code{col} here~~
+#' @param lwd %% ~~Describe \code{lwd} here~~
+#' @param lty %% ~~Describe \code{lty} here~~
+#' @param add %% ~~Describe \code{add} here~~
+#' @param \dots %% ~~Describe \code{\dots} here~~
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (model, which.coef, levels = 0.95, Scheffe = FALSE, 
+#'     dfn = 2, center.pch = 19, center.cex = 1.5, segments = 51, 
+#'     xlab, ylab, las = par("las"), col = palette()[2], lwd = 2, 
+#'     lty = 1, add = FALSE, ...) 
+#' {
+#'     which.coef <- if (length(coefficients(model)) == 2) 
+#'         c(1, 2)
+#'     else {
+#'         if (missing(which.coef)) {
+#'             if (any(names(coefficients(model)) == "(Intercept)")) 
+#'                 c(2, 3)
+#'             else c(1, 2)
+#'         }
+#'         else which.coef
+#'     }
+#'     coef <- coefficients(model)[which.coef]
+#'     xlab <- if (missing(xlab)) 
+#'         paste(names(coef)[1], "coefficient")
+#'     ylab <- if (missing(ylab)) 
+#'         paste(names(coef)[2], "coefficient")
+#'     if (missing(dfn)) {
+#'         if (Scheffe) 
+#'             dfn <- sum(df.terms(model))
+#'         else 2
+#'     }
+#'     dfd <- df.residual(model)
+#'     shape <- vcov(model)[which.coef, which.coef]
+#'     ret <- numeric(0)
+#'     ret <- ell(coef, shape, sqrt(dfn * qf(levels, dfn, dfd)))
+#'     colnames(ret) <- c(xlab, ylab)
+#'     ret
+#'   }
+#' 
 cell.default <-
 function (model, which.coef, levels = 0.95, Scheffe = FALSE, dfn = 2,
     center.pch = 19, center.cex = 1.5, segments = 51, xlab, ylab,
@@ -1612,9 +3148,134 @@ function (model, which.coef, levels = 0.95, Scheffe = FALSE, dfn = 2,
 <pre>"
 
 
+
+
+#' Generic diagnostics
+#' 
+#' Generic diagnostics
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param x %% ~~Describe \code{x} here~~
+#' @param \dots %% ~~Describe \code{\dots} here~~
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (x, ...) 
+#' UseMethod("diags")
+#' 
+#' @export
 diags <- function(x, ...) UseMethod("diags")
 
 
+
+
+#' Standard diagnostics for lm objects
+#' 
+#' Standard diagnostics for lm objects
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param x %% ~~Describe \code{x} here~~
+#' @param y %% ~~Describe \code{y} here~~
+#' @param \dots %% ~~Describe \code{\dots} here~~
+#' @param ask %% ~~Describe \code{ask} here~~
+#' @param labels %% ~~Describe \code{labels} here~~
+#' @param showlabs %% ~~Describe \code{showlabs} here~~
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (x, y, ..., ask, labels = names(residuals(x)), showlabs = text) 
+#' {
+#'     if (!missing(ask)) {
+#'         op <- par(ask = ask)
+#'         on.exit(par(op))
+#'     }
+#'     form <- formula(x)
+#'     f <- predict(x)
+#'     r <- residuals(x)
+#'     nams <- names(r)
+#'     if (!missing(labels)) {
+#'         nams <- names(residuals(x))
+#'         if (length(nams) != length(labels)) 
+#'             labels <- labels[nams]
+#'     }
+#'     ret <- NULL
+#'     if (missing(y)) {
+#'         y <- f + r
+#'         yname <- deparse(form[[2]])
+#'     }
+#'     else yname <- deparse(substitute(y))
+#'     fname <- paste("Fitted:", deparse(form[[3]]), collapse = " ")
+#'     plot(f, y, xlab = fname, ylab = yname, main = "Dependent var. vs. Predicted", 
+#'         ...)
+#'     abline(0, 1, lty = 1)
+#'     lines(supsmu(f, y))
+#'     showlabs(f, y, labels, ...)
+#'     lmi <- lm.influence(x)
+#'     hat <- lmi$hat
+#'     sigma <- lmi$sigma
+#'     mm <- scale(model.matrix(x), scale = F)
+#'     mp <- predict(x, type = "terms")
+#'     comp.res <- mp + r
+#'     plot(f, abs(r), xlab = fname, ylab = deparse(substitute(abs(resid(x)))), 
+#'         main = "Absolute Residual vs. Predicted", ...)
+#'     showlabs(f, abs(r), labels, ...)
+#'     zq <- qqnorm(r, main = "Normal Quantile Plot", ylab = "Residual", 
+#'         sub = fname)
+#'     qqline(r)
+#'     showlabs(zq, labels, ...)
+#'     n <- length(r)
+#'     r.o <- sort(r)
+#'     half <- (n + 1)/2
+#'     if (n%%2 == 1) {
+#'         med <- r.o[half]
+#'         below <- med - r.o[half:1]
+#'         above <- r.o[half:n] - med
+#'     }
+#'     else {
+#'         med <- sum(r.o[c(half, half + 1)])/2
+#'         below <- med - r.o[(n/2):1]
+#'         above <- r.o[(n/2 + 1):n] - med
+#'     }
+#'     opt <- par(pty = "s")
+#'     ran <- range(c(below, above))
+#'     plot(below, above, main = "Symmetry plot of residuals", xlab = "Distance below median", 
+#'         ylab = "Distance above median", xlim = ran, ylim = ran)
+#'     abline(0, 1, lty = 2)
+#'     par(opt)
+#'     std.r <- r/(sigma * sqrt(1 - hat))
+#'     plot(hat, std.r, xlab = "Leverage (hat)", ylab = yname, sub = fname, 
+#'         main = "Studentized residual vs. Leverage", ...)
+#'     showlabs(hat, std.r, labels, ...)
+#'     nams <- dimnames(lmi$coefficients)[[1]]
+#'     pairs(lmi$coefficients)
+#'     pairs(lmi$coefficients, panel = function(x, y, nams) {
+#'         points(x, y)
+#'         text(x, y, nams)
+#'     }, nams = nams)
+#'     invisible(0)
+#'   }
+#' 
+#' @export
 diags.lm <- function(x, y, ..., ask, labels = names(residuals(x)), showlabs = text)
     {
     # diags.lm
@@ -1722,6 +3383,7 @@ diags.lm <- function(x, y, ..., ask, labels = names(residuals(x)), showlabs = te
 	invisible(0)
 }
 
+#' @export
 model.matrix.lme <- function( fit , data = fit$data, 
                               na.action = fit$na.action,
                               ...){
@@ -1741,6 +3403,7 @@ model.matrix.lme <- function( fit , data = fit$data,
 #                              na.action = fit$call$na.action,...)
 #   model.frame(formula(fit), data = data, na.action = na.action)
 
+#' @export
 model.frame.lme <- function (object, data =object$data, na.action = object$na.action, 
                              ...) 
 {
@@ -1757,6 +3420,31 @@ model.frame.lme <- function (object, data =object$data, na.action = object$na.ac
 
 
 
+
+
+#' Standard diagnostics for lme objects
+#' 
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param \dots %% ~~Describe \code{\dots} here~~
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (...) 
+#' cat("Being implemented")
+#' 
+#' @export
 diags.lme <- function( ... ) cat("Being implemented")
 
 
@@ -1771,6 +3459,84 @@ diags.lme <- function( ... ) cat("Being implemented")
 ##  vplot  plots columns of a 2 x n matrix
 ##  Transferred to coursfun: Nov. 15, 2005
 
+
+
+#' Collection of functions to help teach matrix geometry in 2 dimensions
+#' 
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~
+#' 
+#' vplot - plots the columns of a 2 x n matrix or a vector of length 2 - vplot
+#' adds to the current plot resizing it to include all plotted objects in a
+#' 'euclidean' frame - to start a new plot, use 'new = T' - to remove the last
+#' element added use 'vplot(pop=1)' Associated functions: - vell( mean, var)
+#' generates an ellipse, default = unit circle - vbox() generates a box -
+#' vobj() generates a circle in a box - orthog(theta) generates an orthog
+#' matrix rotating through angle theta - orthog.proj generates the matrix of an
+#' orthog. projection into span (x) - vmat( .... ) generates a 2 by n matrix
+#' Examples: vplot( new = T ) vplot( vell(), 'l' ) vplot( cbind(c(3,1),c(1,4))
+#' \%*\% vell()) vplot( pop = 1) vplot( cbind(c(3,1),c(1,4)) \%*\% vell(), type
+#' = 'l', col = 'red') %% ~~ If necessary, more details than the description
+#' above ~~
+#' 
+#' @param mat %% ~~Describe \code{mat} here~~
+#' @param type %% ~~Describe \code{type} here~~
+#' @param new %% ~~Describe \code{new} here~~
+#' @param pch %% ~~Describe \code{pch} here~~
+#' @param pop %% ~~Describe \code{pop} here~~
+#' @param \dots %% ~~Describe \code{\dots} here~~
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (mat, type = "p", new = F, pch = 16, pop = 0, ...) 
+#' {
+#' 
+#' 
+#'     if (new || !exists(".vplot")) 
+#'         assign(".vplot", list(list(x = 0, y = 0, type = "n")), 
+#'             pos = 1)
+#'     a <- .vplot
+#'     if (!missing(mat)) {
+#'         mat <- cbind(mat)
+#'         if (type == "v") {
+#'             zz <- rbind(0 * mat, mat, mat/0)
+#'             mat <- matrix(c(zz), nrow = 2)
+#'             type = "b"
+#'         }
+#'         d <- dim(mat)
+#'         if (d[1] != 2 && d[2] == 2) {
+#'             mat <- t(mat)
+#'             warning("mat is n x 2 and has been transposed")
+#'         }
+#'         a <- c(a, list(list(x = mat[1, ], y = mat[2, ], type = type, 
+#'             pch = pch, ...)))
+#'     }
+#'     dat <- NULL
+#'     for (i in seq(along = a)) {
+#'         dat <- c(dat, a[[i]]$x, a[[i]]$y)
+#'     }
+#'     par(pty = "s")
+#'     plot(range(na.omit(dat)), range(na.omit(dat)), type = "n", 
+#'         xlab = "", ylab = "")
+#'     if (pop > 0) {
+#'         keep <- 1:max(1, (length(a) - (pop + 1)))
+#'         a <- a[keep]
+#'     }
+#'     abline(h = 0, v = 0)
+#'     for (i in seq(along = a)) do.call("points", a[[i]])
+#'     assign(".vplot", a, pos = 1)
+#'     invisible(a)
+#'   }
+#' 
+#' @export
 vplot <- function( mat , type = 'p', new = F,  pch = 16, pop = 0, ...) {
 help <- "
 vplot    - plots the columns of a 2 x n matrix or a vector of length 2
@@ -1825,13 +3591,146 @@ vplot    - plots the columns of a 2 x n matrix or a vector of length 2
      invisible(a)
 }
 
+
+
+#' Vector around an ellipse
+#' 
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param \dots %% ~~Describe \code{\dots} here~~
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (...) 
+#' t(ell(...))
+#' 
+#' @export
 vell <- function(...) t( ell(...))
+
+
+#' Unit box
+#' 
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param \dots %% ~~Describe \code{\dots} here~~
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (...) 
+#' cbind(c(-1, -1), c(-1, 1), c(1, 1), c(1, -1), c(-1, -1))
+#' 
+#' @export
 vbox <- function(...) cbind( c(-1,-1), c(-1,1), c(1,1), c(1,-1), c(-1,-1))
+
+
+#' Combine ellipse with subtending box
+#' 
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param \dots %% ~~Describe \code{\dots} here~~
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (...) 
+#' {
+#'     cbind(vell(), NA, vbox(), NA, c(0, -1), c(0, 1), NA, c(-1, 
+#'         0), c(1, 0))
+#'   }
+#' 
+#' @export
 vobj <- function(...) {
      cbind( vell(), NA, vbox(), NA, c(0,-1),c(0,1), NA, c(-1,0), c(1,0))
 }
+
+
+#' Square in 2 dimensions
+#' 
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param \dots %% ~~Describe \code{\dots} here~~
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (...) 
+#' vmat(0, 0, 0, 1, 1, 1, 1, 0, 0, 0)
+#' 
+#' @export
 vsquare <- function(...) vmat( 0,0,0,1,1,1,1,0,0,0)
 
+
+
+#' Create a matrix entering vectors column by column
+#' 
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param \dots %% ~~Describe \code{\dots} here~~
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (...) 
+#' {
+#'     help <- "\nvmat creates a matrix entering data column by column\n"
+#'     aa <- list(...)
+#'     aa <- do.call("c", aa)
+#'     matrix(aa, nrow = 2)
+#'   }
+#' 
+#' @export
 vmat <- function(...) {
 help <- "
 vmat creates a matrix entering data column by column
@@ -1841,7 +3740,60 @@ vmat creates a matrix entering data column by column
      matrix(aa, nrow = 2)
 }
 
+
+
+#' Two by two matrix of orthogonal rotation
+#' 
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param theta %% ~~Describe \code{theta} here~~
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (theta) 
+#' cbind(c(cos(theta), sin(theta)), c(-sin(theta), cos(theta)))
+#' 
+#' @export
 orthog <- function( theta ) cbind( c( cos(theta), sin(theta)), c( - sin(theta), cos(theta)))
+
+
+#' Orthogonal projection matrix -- check possibly poor numerical behaviour
+#' 
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param x %% ~~Describe \code{x} here~~
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (x) 
+#' {
+#'     x <- cbind(x)
+#'     x %*% solve(t(x) %*% x, x)
+#'   }
+#' 
+#' @export
 orthog.proj <- function ( x ) {
        x <- cbind(x)
        x %*% solve(t(x) %*% x , x)
@@ -1858,6 +3810,42 @@ orthog.proj <- function ( x ) {
 ###  trim
 ###
 
+
+
+#' Trim trailing blanks
+#' 
+#' Generic function to trim leading and trailing blanks from character vectors
+#' and factors.
+#' 
+#' The main application is in reading SPSS files that often have leading or
+#' trailing blanks in character and factor values. These blanks are often
+#' inconsistent so that values will appear to differ even though they are
+#' equal.  The trim function is called in \code{Read.spss} to remove leading
+#' and trailing blanks from all factors.
+#' 
+#' @param x a data frame, factor, character or numeric vector %% ~~Describe
+#' \code{x} here~~
+#' @return A character vector or factor with leading and trailing blanks
+#' removed.
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (x) 
+#' {
+#' trim in fun.R
+#'     UseMethod("trim")
+#'   }
+#' 
+#' @export
   trim <- function(x) {
        help <- "
 trim in fun.R
@@ -1868,27 +3856,198 @@ trim in fun.R
        UseMethod("trim")
 }
 
+
+
+#' Trim trailing blanks from all variables in a data frame
+#' 
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param x %% ~~Describe \code{x} here~~
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (x) 
+#' {
+#'     for (nn in names(x)) x[[nn]] <- trim(x[[nn]])
+#'     x
+#'   }
+#' 
+#' @export
   trim.data.frame <- function(x) {
       for ( nn  in names(x)) x[[nn]] <- trim(x[[nn]])
       x
   }
+
+
+#' Trim trailing blanks from a factor object
+#' 
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param x %% ~~Describe \code{x} here~~
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (x) 
+#' {
+#'     levels(x) <- trim(levels(x))
+#'     x
+#'   }
+#' 
+#' @export
   trim.factor <- function( x ) {
       levels(x) <- trim(levels(x))
       x
   }
+
+
+#' Trim trailing blanks from character vector
+#' 
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param x %% ~~Describe \code{x} here~~
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (x) 
+#' {
+#'     x[] <- sub(" +$", "", x)
+#'     x
+#'   }
+#' 
+#' @export
   trim.character <- function( x ) {
       x[] <- sub(" +$", "", x )
       x[] <- sub("^ +", "", x )
       x
   }
+
+
+#' Trim default -- identity
+#' 
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param x %% ~~Describe \code{x} here~~
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (x) 
+#' x
+#' 
+#' @export
   trim.default <- function(x) x
   
+
+
+#' Read an SPSS file
+#' 
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param \dots %% ~~Describe \code{\dots} here~~
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (...) 
+#' {
+#'     require("Hmisc")
+#'     dd <- spss.get(...)
+#'     trim(dd)
+#'   }
+#' 
+#' @export
   Read.spss <- function( ... ) {
             require("Hmisc")
             dd <- spss.get ( ... )
             trim( dd )
   }
   
+
+
+#' read a STATA .dta file
+#' 
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param \dots %% ~~Describe \code{\dots} here~~
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (...) 
+#' {
+#'     help <- "\n  Read.dta reads Stata files using 'read.dta' in 'library(foreign)'\n  This appears to be an ideal way of importing spss files in order\n  to keep full variable names. Direct use of 'read.spss' on a SPSS\n  '.sav' file abbreviates variable names to 8 characters.\n  Note: missing.type = T produces warnings.\n"
+#'     require("foreign")
+#'     dd <- read.dta(...)
+#'     cls <- sapply(dd, class)
+#'     ch.nams <- names(dd)[cls == "character"]
+#'     for (nn in ch.nams) dd[[nn]] <- factor(trim(dd[[nn]]))
+#'     dd
+#'   }
+#' 
+#' @export
   Read.dta <- function ( ... ) {
 help <- "
   Read.dta reads Stata files using 'read.dta' in 'library(foreign)'
@@ -1907,11 +4066,87 @@ help <- "
   }
   
   
+
+
+#' Write a STATA file
+#' 
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param \dots %% ~~Describe \code{\dots} here~~
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (...) 
+#' {
+#'     require("foreign")
+#'     write.dta(..., version = 7)
+#'   }
+#' 
+#' @export
   Write.dta <- function( ... ) {
        require("foreign")
        write.dta( ..., version = 7)
   }
   
+
+
+#' Write and SPSS file
+#' 
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param dataframe %% ~~Describe \code{dataframe} here~~
+#' @param file %% ~~Describe \code{file} here~~
+#' @param \dots %% ~~Describe \code{\dots} here~~
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (dataframe, file, ...) 
+#' {
+#'     require(foreign)
+#'     dname <- deparse(substitute(dataframe))
+#'     disp(dname)
+#'     cls <- sapply(dataframe, class)
+#'     for (nn in names(dataframe)[cls == "Date"]) {
+#'         dataframe[[nn]] <- as.character(dataframe[[nn]], "%Y/%m/%d")
+#'     }
+#'     if (any(cls == "Date")) {
+#'         cat("\nOpen .dta file in SPSS and convert following variables to dates\nwith yyyy/mm/dd format:\n")
+#'         for (nn in names(dataframe)[cls == "Date"]) cat("       ", 
+#'             nn, "\n")
+#'     }
+#'     for (nn in names(dataframe)[cls == "factor"]) {
+#'         dataframe[[nn]] <- as.character(dataframe[[nn]])
+#'     }
+#'     if (missing(file)) 
+#'         file <- paste(dname, ".dta", sep = "")
+#'     else file <- sub("\.dta$|\.DTA$|$", ".dta", file)
+#'     cat(paste("\nData saved in", file, "\n"))
+#'     write.dta(dataframe, file, version = 7, ...)
+#'   }
+#' 
+#' @export
   Write.spss <- function( dataframe, file, ... ) {
         require(foreign)
         dname <- deparse(substitute(dataframe))
@@ -1948,10 +4183,171 @@ help <- "
 <pre>
 "
 
+
+
+
+
+#' Apply a function within each cluster of multilevel data
+#' 
+#' Apply a function to each cell of a ragged array, that is to each (non-empty)
+#' group of values given by a unique combination of the levels of certain
+#' factors and, in contrast with \code{tapply}, return within each cell a
+#' vector of the same length as the cell, which are then ordered to match the
+#' positions of the cells in the input.
+#' 
+#' \code{capply} is very similar to \code{ave} in \code{package:stats}. They
+#' differ in the way they treat missing values in the clustering variables.
+#' \code{ave} treats missing values as if they were legitimate clustering
+#' levels while \code{capply} returns a value of NA within any cluster formed
+#' by a combination of clustering variable values that includes a value of NA.
+#' 
+#' 
+#' \code{capply} extends the function of \code{tapply(x, by, FUN)[ tapply(x,
+#' by) ]}. The function \code{FUN} is applied to each cell of \code{x} defined
+#' by each value of \code{by}. The result in each cell is recycled to a vector
+#' of the same length as the cell. These vectors are then arranged to match the
+#' input \code{x}.  Thus, is the value returned within each cell is a scalar,
+#' the effect of \code{capply(x, by, FUN)} is the same as \code{tapply(x, by,
+#' FUN)[ tapply(x, by) ]}.  \code{capply} extends this use of \code{tapply} by
+#' allowing the the value returned within each cell to be a vector of the same
+#' size as the cell.
+#' 
+#' The \code{capply.formula} method allow the use of two-sided formula of the
+#' form \code{x ~ a + b} or \code{cbind(x, y) ~ a + b} where the variables on
+#' the left-hand side are used to create a data frame that is given as a first
+#' argument to \code{FUN}. If there is a single variable on the left-hand side
+#' then that variable can be treated as a vector by \code{FUN}.
+#' 
+#' @aliases capply capply.default capply.formula cvar cvars dvar dvar.factor
+#' dvar.default cvar.factor cvar.default
+#' @param x a vector or data frame that provides the first argument of
+#' \code{FUN} %% ~~Describe \code{x} here~~
+#' @param by If \code{x} is a vector: a 'factor' of the same lenth as \code{x}
+#' whose levels identify clusters.  If \code{x} is a data frame, a one-sided
+#' formula that identifies the variable(s) within \code{x} to be used to
+#' clusters.
+#' @param FUN a function to be applied to \code{x} within each cluster.
+#' \code{FUN} can return a single value, or a vector whose length is equal to
+#' the number of elements in each cluster.
+#' @param fmla in \code{capply.formula}, codefmla is a two-sided formula as in
+#' \code{\link{aggregate.formula}}. The left-hand side identifies the
+#' variable(s) in \code{data} to be include in a data.frame that clusterd using
+#' the the variables in the right-hand side of the formula.
+#' @param \dots additional variables to be supplied to \code{FUN} %% ~~Describe
+#' \code{\dots} here~~
+#' @return When the result in each cell is a scalar, \code{capply} can be used
+#' to for multilevel analysis to produce 'contextual variables' computed within
+#' subgroups of the data and expanded to a constant over elements of each
+#' subgroup.
+#' 
+#' \code{capply( x , by, FUN , ...)} where \code{x} is a vector
+#' 
+#' is equivalent to
+#' 
+#' \code{unsplit ( lapply ( split ( x , by ), FUN, ...), by )}
+#' 
+#' which has the same effect as
+#' 
+#' \code{tapply( x, by, FUN, ...) [ tapply( x, by) ]}
+#' 
+#' if \code{FUN} returns a vector of length 1.
+#' 
+#' If \code{FUN} returns a vector, it is recycled to the length of the input
+#' value.
+#' 
+#' When the first argument is a data frame:
+#' 
+#' \code{capply ( dd, by, FUN, ...)}
+#' 
+#' uses unsplit - lapply - split to apply \code{FUN} to each sub data frame. In
+#' this case, \code{by} can be a formula that is evaluated in 'dd'.
+#' 
+#' This syntax makes it easy to compute formulas involving more than one
+#' variable in 'dd'. An example:
+#' 
+#' \code{capply( dd, ~gg, function(x) with( x, mean(Var1) / mean(Var2) ) )}
+#' 
+#' where 'Var1' and 'Var2' are numeric variables and 'gg' a grouping factor in
+#' data frame 'dd'.  Or, using the \code{with} function:
+#' 
+#' \code{capply( dd, ~gg, with , mean(Var1) / mean(Var2) )}
+#' 
+#' \code{cvar} and \code{cvars} are intended to create contextual variables in
+#' model formulas. If 'x' is numerical, \code{cvar} is equivalent to
+#' \code{capply(x,id,mean)} and \code{cvars} is equivalent to
+#' \code{capply(x,id,sum)}.
+#' 
+#' If \code{x} is a factor, \code{cvar} generates the equivalent of a model
+#' matrix for the factor with indicators replaced by the proportion within each
+#' cluster.
+#' 
+#' \code{dvar} is equivalent to \code{x - cvar(x,by)} and creates what is
+#' commonly known as a version of 'x' that is 'centered within groups' (CWG).
+#' It creates the correct matrix for a factor so that the between group
+#' interpretation of the effect of \code{cvar(x,by)} is that of the 'between
+#' group' or 'compositional' effect of the factor.
+#' @note \code{capply} tends to be slow when there are many cells and \code{by}
+#' is a factor. This may be due to the need to process all factor levels for
+#' each cell. Turning \code{by} into a numeric or character vector improves
+#' speed: e.g. \code{capply( x, as.numeric(by), FUN)}. %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords manip
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#'      data( hs )
+#'      head( hs )
+#' 
+#'      # FUN returns a single value
+#'      hs$ses.mean <- capply( hs$ses, hs$school, mean, na.rm = T)
+#'      hs$ses.hetero <- capply ( hs$ses, hs$school, sd , na.rm = T)
+#'      hs.summ <- up( hs, ~school )
+#'      head( hs.summ )   # variables invariant within school
+#'      
+#'      # FUN returns a vector
+#'      # with 'x' a data frame
+#'      # Note how the 'with' function provides an easy way to write use a
+#'      #   formula as the '...' variable.
+#'      
+#'      hs$minority.prop <- capply( hs, ~ school, with, mean( Minority == "Yes"))
+#'      
+#'      # equivalently:
+#'      
+#'      hs$minority.prop <- capply( hs$Minority, hs$school, mean)
+#'      
+#'      # on very large data frames with many columns that are not used, the 'data frame'
+#'      # version of 'capply' can be very slow in comparison with 'vector' version.
+#'      
+#'      # In contrast with 'tapply' 'FUN' can return a vector, e.g. ranks within groups
+#'      
+#'      hs$mathach.rank <- capply( hs, ~ school, with , rank(mathach))
+#'      
+#'      # cvar and dvar in multilevel models
+#'      
+#'      library( nlme )
+#'      data ( hs )
+#'      fit <- lme( mathach ~ Minority * Sector, hs, random = ~ 1 | school)
+#'      summary ( fit )
+#'      
+#'      fit.contextual <- lme( mathach ~ (Minority + cvar(Minority, school)) * Sector,
+#'                        hs, random = ~ 1| school)
+#'      summary(fit.contextual) # contextual effect of cvar(Minority)
+#'      
+#'      fit.compositional <- lme( mathach ~ (dvar(Minority,school) + cvar(Minority, school)) * Sector,
+#'                        hs, random = ~ 1| school)
+#'      summary(fit.compositional) # compositional effect of cvar(Minority)
+#' 
+#' @export
 capply <- function ( x ,... ) UseMethod("capply")
 
 
 
+#' @export
 capply.formula <- function(formula, data, FUN, ...) {
 # the first portion of this code is from stats:::aggregate.formula
 # to avoid evaluating formula
@@ -1985,6 +4381,7 @@ capply.formula <- function(formula, data, FUN, ...) {
     ret
 }
 
+#' @export
 oldcapply.default <- function ( x, by, FUN , ...) {
   FUN <- match.fun(FUN)
   if (inherits(by,'formula')) by <- model.frame( by , x , na.action = na.include)
@@ -1994,6 +4391,7 @@ oldcapply.default <- function ( x, by, FUN , ...) {
 }
 
 
+#' @export
 capply.default <- function ( x, by, FUN , ...) {
   FUN <- match.fun(FUN)
   if (inherits(by,'formula')) by <- model.frame( by , x , na.action = na.include)
@@ -2047,8 +4445,65 @@ capply.default <- function ( x, by, FUN , ...) {
 
 
 
+#' @export
 xapply <- function(x, ...) UseMethod("xapply")
 
+
+
+#' Apply a function over a ragged array and return a data frame
+#' 
+#' Splits the data into subsets, computes summary statistics for each, and
+#' returns the result in a convenient form. %% ~~ A concise (1-5 lines)
+#' description of what the function does. ~~
+#' 
+#' \code{xapply} works like \code{\link{aggregate}} except that the result is
+#' returned as a vector in a data frame with the levels of the \code{by}
+#' variable replicated according to the length of the result.
+#' 
+#' The intention in writing \code{xapply} was to facilitate the creation of
+#' 'prediction data frames' extending \code{expand.grid} so that the values of
+#' a variable can easily depend on the value of a factor. For example,
+#' predicting weight from height it might be desired to have a range of heights
+#' for each sex that is consistent with the conditional distribution.
+#' 
+#' Suppose a data frame \code{hw} contains variables Sex, height and weight.
+#' Instead of \preformatted{ > fit <- lm ( weight ~ height * Sex, hw) > pred <-
+#' expand.grid( Sex = levels(hw$Sex), height = quantile( hw$height,
+#' c(0,5,25,50,75,95,100)/100)) > pred$weight <- predict( fit, pred) > xyplot(
+#' weight ~ height, pred, groups = Sex, type = 'b') } we can have:
+#' \preformatted{ > fit <- lm ( weight ~ height * Sex, hw) > pred <-
+#' expand.grid( Sex = levels(hw$Sex) ) > pred <- merge( pred, xapply( height ~
+#' Sex, hw, quantile, c(0,5,25,50,75,95,100)/100)) > pred$weight <- predict(
+#' fit, pred) > xyplot( weight ~ height, pred, groups = Sex, type = 'b') }
+#' 
+#' @aliases xapply.formula xapply xpandlist
+#' @param formula a two-sided formula: the lhs identifies the variable(s) that
+#' are the first argument of FUN (if there is more than one as in \code{cbind(
+#' x, y)}), then \code{FUN} is applied to each in turn. Note that this
+#' behaviour is different from that of \code{capply}, where \code{FUN} is
+#' applied to the resulting data frame. The rhs identifies the variables to be
+#' used to split the data into subsets.
+#' @param data a data frame.
+#' @param FUN a function.
+#' @param \dots additional arguments to the function
+#' @param subset a condition to subset the data frame.
+#' @param na.action determines whether to omit or include NAs in the grouping
+#' factors. Use \code{na.include} so NAs will form a distinct level. %%
+#' ~~Describe \code{na.action} here~~
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' 
+#' @export
 xapply.formula <- function(formula, data, FUN, ..., subset, na.action = na.omit, debug = FALSE) {
 # the first portion of this code is from stats:::aggregate.formula
 # to avoid evaluating formula
@@ -2081,6 +4536,7 @@ xapply.formula <- function(formula, data, FUN, ..., subset, na.action = na.omit,
 }
 
 
+#' @export
 xapply.default <- function( x, ...) {
     ret <- aggregate( x, ..., simplify = FALSE)
     xpandlist(ret)
@@ -2088,6 +4544,7 @@ xapply.default <- function( x, ...) {
 
 
 
+#' @export
 xpandlist <- function ( x ) {
 # make lists long in a data frame
 # internal function to spida to turn the ouput of  aggregate with simplify = FALSE
@@ -2118,6 +4575,37 @@ xpandlist <- function ( x ) {
 ###   pchisq.mix
 ###
 
+
+
+#' P-value for a mixed Chi-Square
+#' 
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param q %% ~~Describe \code{q} here~~
+#' @param df %% ~~Describe \code{df} here~~
+#' @param mix %% ~~Describe \code{mix} here~~
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (q, df, mix = rep(1, length(df))/length(df)) 
+#' {
+#'     pc <- function(df) if (df == 0) 
+#'         1 * (q >= 0)
+#'     else pchisq(q, df)
+#'     sum(sapply(df, pc) * mix)
+#'   }
+#' 
    pchisq.mix <- function( q, df , mix = rep(1,length(df))/length(df) ) {
          # returns cdf for mixture of chi-squares. Usefule for testing
          # random effects in mixed models
@@ -2126,8 +4614,73 @@ xpandlist <- function ( x ) {
    }
 
 
+
+
+
+
+#' as.character
+#' 
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param x %% ~~Describe \code{x} here~~
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (x) 
+#' as.character(x)
+#' 
    ch <- as.character
 
+
+
+#' Find the first non-missing element of a vector and check whether there are
+#' other inconsistent non-missing values
+#' 
+#' Find the first non-missing element of a vector and check whether there are
+#' other inconsistent non-missing values %% ~~ A concise (1-5 lines)
+#' description of what the function does. ~~
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param x %% ~~Describe \code{x} here~~
+#' @param \dots %% ~~Describe \code{\dots} here~~
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (x, ...) 
+#' {
+#'     ret <- unique(x[!is.na(x)])
+#'     if (length(ret) > 1 && is.character(ret) && ("" %in% ret)) 
+#'         ret <- ret[ret != ""]
+#'     if (length(ret) > 1) {
+#'         cat("\n\n============= Multiple values in select.first ==========\n")
+#'         for (i in 1:length(ret)) cat("\nValue", i, ": <<", ret[i], 
+#'             ">>\n")
+#'     }
+#'     ret[1]
+#'   }
+#' 
+#' @export
    select.first <- function( x , ... ) {
        ret <- unique( x [ !is.na(x) ])
        if ( length(ret) > 1 && is.character( ret ) && ( "" %in% ret)) ret <- ret [ ret != ""]
@@ -2138,22 +4691,148 @@ xpandlist <- function ( x ) {
        ret [1]
    }
 
+#' @export
    fill <- function( x, ... ) UseMethod("fill")
 
+
+
+#' Create time invariant variable by filling in missing values
+#' 
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param x %% ~~Describe \code{x} here~~
+#' @param by %% ~~Describe \code{by} here~~
+#' @param FUN %% ~~Describe \code{FUN} here~~
+#' @param \dots %% ~~Describe \code{\dots} here~~
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (x, by, FUN = select.first, ...) 
+#' {
+#'     levs <- levels(x)
+#'     ret <- capply(ch(x), by, FUN, ...)
+#'     factor(ret, levels = levs)
+#'   }
+#' 
+#' @export
    fill.factor <- function( x, by, FUN = select.first, ...) {
       levs <- levels(x)
       ret <- capply( ch( x), by, FUN , ... )
       factor( ret, levels = levs)
    }
 
+
+
+#' Create a time-invariant variable by filling in NAs
+#' 
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param x %% ~~Describe \code{x} here~~
+#' @param by %% ~~Describe \code{by} here~~
+#' @param FUN %% ~~Describe \code{FUN} here~~
+#' @param \dots %% ~~Describe \code{\dots} here~~
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (x, by, FUN = select.first, ...) 
+#' {
+#'     as.Date(capply(ch(x), by, FUN, ...))
+#'   }
+#' 
+#' @export
    fill.Date <- function( x, by, FUN = select.first, ...) {
       as.Date( capply(ch(x), by, FUN, ...))
    }
 
+
+
+#' Default method to fill in values of time-invariant variable
+#' 
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param x %% ~~Describe \code{x} here~~
+#' @param by %% ~~Describe \code{by} here~~
+#' @param FUN %% ~~Describe \code{FUN} here~~
+#' @param \dots %% ~~Describe \code{\dots} here~~
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (x, by, FUN = select.first, ...) 
+#' {
+#'     capply(x, by, FUN, ...)
+#'   }
+#' 
+#' @export
    fill.default <- function( x , by , FUN = select.first, ...) {
       capply( x, by, FUN, ...)
    }
 
+
+
+#' Fill in missing values to create a time-invariant variable
+#' 
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param x %% ~~Describe \code{x} here~~
+#' @param by %% ~~Describe \code{by} here~~
+#' @param \dots %% ~~Describe \code{\dots} here~~
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (x, by, ...) 
+#' {
+#'     ret <- list()
+#'     for (nn in names(x)) {
+#'         ret[[nn]] <- fill(x[[nn]], by)
+#'     }
+#'     as.data.frame(ret)
+#'   }
+#' 
+#' @export
    fill.data.frame <- function ( x, by ,... ) {
           ret <- list()
           for ( nn in names(x)) {
@@ -2176,6 +4855,7 @@ xpandlist <- function ( x ) {
     ##
     
 
+#' @export
     cvar <- function( x, id ,... ) {
         help = "
         cvar: creates contextual group mean variables within levels of 'id'.\n
@@ -2198,6 +4878,7 @@ xpandlist <- function ( x ) {
         UseMethod("cvar")
     }
     
+#' @export
     cvar.factor <- function( x, id, ... ) {
         mat <- contrasts( x) [ x,]
         ret <- cvar(mat, id, ...)
@@ -2205,6 +4886,7 @@ xpandlist <- function ( x ) {
         ret
     }
     
+#' @export
     cvar.default <- function( x, id, ... ) {
         if ( is.matrix (x) ) {
             if ( dim(x)[2] == 1) return( cvar( x[,], id, ...))
@@ -2219,6 +4901,7 @@ xpandlist <- function ( x ) {
     }
     
 
+#' @export
     dvar <- function( x, id ,... ) {
         help = "
         dvar: produces group mean centering: x - cvar(x, id)
@@ -2227,6 +4910,7 @@ xpandlist <- function ( x ) {
         UseMethod("dvar")
     }
     
+#' @export
     dvar.factor <- function( x, id, ... ) {
         mat <- contrasts( x) [ x,]
         ret <- mat - cvar(mat, id, ...)
@@ -2234,6 +4918,7 @@ xpandlist <- function ( x ) {
         ret
     }
     
+#' @export
     dvar.default <- function( x, id, ... ) {
         if ( is.matrix (x) ) {
             if ( dim(x)[2] == 1) return( dvar( x[,], id, ...))
@@ -2251,6 +4936,7 @@ xpandlist <- function ( x ) {
 ##  sum
 ##
     
+#' @export
 cvars <- function(  x, by, ...) {
       if ( length(x) == 1 && x == 1) {
             n <- nrow(as.data.frame(by))
@@ -2262,11 +4948,215 @@ cvars <- function(  x, by, ...) {
 
 
 
+
+
+#' Transform NAs to 0
+#' 
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param x %% ~~Describe \code{x} here~~
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (x) 
+#' {
+#'     x[is.na(x)] <- 0
+#'     x
+#'   }
+#' 
+#' @export
 na20 <- function(x) {
      x[is.na(x)] <- 0
      x
 }
 
+
+
+#' Describe a vector
+#' 
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param x %% ~~Describe \code{x} here~~
+#' @param descript %% ~~Describe \code{descript} here~~
+#' @param exclude.missing %% ~~Describe \code{exclude.missing} here~~
+#' @param digits %% ~~Describe \code{digits} here~~
+#' @param weights %% ~~Describe \code{weights} here~~
+#' @param normwt %% ~~Describe \code{normwt} here~~
+#' @param \dots %% ~~Describe \code{\dots} here~~
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (x, descript, exclude.missing = TRUE, digits = 4, weights = NULL, 
+#'     normwt = FALSE, ...) 
+#' {
+#'     oldopt <- options(digits = digits)
+#'     on.exit(options(oldopt))
+#'     if (length(weights) == 0) 
+#'         weights <- rep(1, length(x))
+#'     special.codes <- attr(x, "special.miss")$codes
+#'     labx <- attr(x, "label")
+#'     if (missing(descript)) 
+#'         descript <- as.character(sys.call())[2]
+#'     if (length(labx) && labx != descript) 
+#'         descript <- paste(descript, ":", labx)
+#'     un <- attr(x, "units")
+#'     if (length(un) && un == "") 
+#'         un <- NULL
+#'     fmt <- attr(x, "format")
+#'     if (length(fmt) && (is.function(fmt) || fmt == "")) 
+#'         fmt <- NULL
+#'     if (length(fmt) > 1) 
+#'         fmt <- paste(as.character(fmt[[1]]), as.character(fmt[[2]]))
+#'     present <- if (all(is.na(x))) 
+#'         rep(FALSE, length(x))
+#'     else if (is.character(x)) 
+#'         (if (.R.) 
+#'             x != "" & x != " " & !is.na(x)
+#'         else x != "" & x != " ")
+#'     else !is.na(x)
+#'     present <- present & !is.na(weights)
+#'     if (length(weights) != length(x)) 
+#'         stop("length of weights must equal length of x")
+#'     if (normwt) {
+#'         weights <- sum(present) * weights/sum(weights[present])
+#'         n <- sum(present)
+#'     }
+#'     else n <- round(sum(weights[present]), 2)
+#'     if (exclude.missing && n == 0) 
+#'         return(structure(NULL, class = "describe"))
+#'     missing <- round(sum(weights[!present], na.rm = TRUE), 2)
+#'     atx <- attributes(x)
+#'     atx$names <- atx$dimnames <- atx$dim <- atx$special.miss <- NULL
+#'     atx$class <- atx$class[atx$class != "special.miss"]
+#'     isdot <- testDateTime(x, "either")
+#'     isdat <- testDateTime(x, "both")
+#'     x <- x[present, drop = FALSE]
+#'     x.unique <- sort(unique(x))
+#'     weights <- weights[present]
+#'     n.unique <- length(x.unique)
+#'     attributes(x) <- attributes(x.unique) <- atx
+#'     isnum <- (is.numeric(x) || isdat) && !is.category(x)
+#'     timeUsed <- isdat && testDateTime(x.unique, "timeVaries")
+#'     z <- list(descript = descript, units = un, format = fmt)
+#'     counts <- c(n, missing)
+#'     lab <- c("n", "missing")
+#'     if (length(special.codes)) {
+#'         tabsc <- table(special.codes)
+#'         counts <- c(counts, tabsc)
+#'         lab <- c(lab, names(tabsc))
+#'     }
+#'     if (length(atx$imputed)) {
+#'         counts <- c(counts, length(atx$imputed))
+#'         lab <- c(lab, "imputed")
+#'     }
+#'     if (length(pd <- atx$partial.date)) {
+#'         if ((nn <- length(pd$month)) > 0) {
+#'             counts <- c(counts, nn)
+#'             lab <- c(lab, "missing month")
+#'         }
+#'         if ((nn <- length(pd$day)) > 0) {
+#'             counts <- c(counts, nn)
+#'             lab <- c(lab, "missing day")
+#'         }
+#'         if ((nn <- length(pd$both)) > 0) {
+#'             counts <- c(counts, nn)
+#'             lab <- c(lab, "missing month,day")
+#'         }
+#'     }
+#'     if (length(atx$substi.source)) {
+#'         tabss <- table(atx$substi.source)
+#'         counts <- c(counts, tabss)
+#'         lab <- c(lab, names(tabss))
+#'     }
+#'     counts <- c(counts, n.unique)
+#'     lab <- c(lab, "unique")
+#'     x.binary <- n.unique == 2 && isnum && x.unique[1] == 0 && 
+#'         x.unique[2] == 1
+#'     if (x.binary) {
+#'         counts <- c(counts, sum(weights[x == 1]))
+#'         lab <- c(lab, "Sum")
+#'     }
+#'     if (isnum) {
+#'         xnum <- if (.SV4.) 
+#'             as.numeric(x)
+#'         else oldUnclass(x)
+#'         if (isdot) {
+#'             dd <- sum(weights * xnum)/sum(weights)
+#'             fval <- formatDateTime(dd, atx, !timeUsed)
+#'             counts <- c(counts, fval)
+#'         }
+#'         else counts <- c(counts, format(sum(weights * x)/sum(weights), 
+#'             ...))
+#'         lab <- c(lab, "Mean")
+#'     }
+#'     if (n.unique >= 10 & isnum) {
+#'         q <- if (any(weights != 1)) 
+#'             wtd.quantile(xnum, weights, normwt = FALSE, na.rm = FALSE, 
+#'                 probs = c(0.05, 0.1, 0.25, 0.5, 0.75, 0.9, 0.95))
+#'         else quantile(xnum, c(0.05, 0.1, 0.25, 0.5, 0.75, 0.9, 
+#'             0.95), na.rm = FALSE)
+#'         fval <- if (isdot) 
+#'             formatDateTime(q, atx, !timeUsed)
+#'         else format(q, ...)
+#'         counts <- c(counts, fval)
+#'         lab <- c(lab, ".05", ".10", ".25", ".50", ".75", ".90", 
+#'             ".95")
+#'     }
+#'     names(counts) <- lab
+#'     z$counts <- counts
+#'     counts <- NULL
+#'     if (n.unique >= 20) {
+#'         if (isnum) {
+#'             r <- range(xnum)
+#'             xg <- pmin(1 + floor((100 * (xnum - r[1]))/(r[2] - 
+#'                 r[1])), 100)
+#'             z$intervalFreq <- list(range = as.single(r), count = as.integer(tabulate(xg)))
+#'         }
+#'         lo <- x.unique[1:5]
+#'         hi <- x.unique[(n.unique - 4):n.unique]
+#'         fval <- if (isdot) 
+#'             formatDateTime(c(oldUnclass(lo), oldUnclass(hi)), 
+#'                 atx, !timeUsed)
+#'         else format(c(format(lo), format(hi)), ...)
+#'         counts <- fval
+#'         names(counts) <- c("L1", "L2", "L3", "L4", "L5", "H5", 
+#'             "H4", "H3", "H2", "H1")
+#'     }
+#'     if (n.unique > 1 && n.unique < 20 && !x.binary) {
+#'         tab <- wtd.table(if (isnum) 
+#'             format(x)
+#'         else x, weights, normwt = FALSE, na.rm = FALSE, type = "table")
+#'         pct <- round(100 * tab/sum(tab))
+#'         counts <- t(as.matrix(tab))
+#'         counts <- rbind(counts, pct)
+#'         dimnames(counts)[[1]] <- c("Frequency", "%")
+#'     }
+#'     z$values <- counts
+#'     structure(z, class = "describe")
+#'   }
+#' 
 describe.vector <-
 function (x, descript, exclude.missing = TRUE, digits = 4, weights = NULL,
     normwt = FALSE, ...)
@@ -2419,6 +5309,39 @@ function (x, descript, exclude.missing = TRUE, digits = 4, weights = NULL,
 }
 
 
+
+
+#' Include NAs
+#' 
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param obj %% ~~Describe \code{obj} here~~
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (obj) 
+#' {
+#'     if (inherits(obj, "data.frame")) 
+#'         for (i in seq(along = obj)) obj[[i]] <- na.include(obj[[i]])
+#'     else {
+#'         if (length(levels(obj)) && any(is.na(obj))) 
+#'             obj <- factor(obj, exclude = NULL)
+#'     }
+#'     obj
+#'   }
+#' 
+#' @export
 na.include  <- function (obj)
 {
      # from library(Hmisc)
@@ -2432,17 +5355,94 @@ na.include  <- function (obj)
 }
 
 
-summ <- function(x,...) UseMethod("summ")
 
+
+#' Special version of summary
+#' 
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param x %% ~~Describe \code{x} here~~
+#' @param \dots %% ~~Describe \code{\dots} here~~
+#' @export
+summ <- function(x,...) UseMethod("summ")
+#' Summary for lmer objects
+#' 
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param x %% ~~Describe \code{x} here~~
+#' @param \dots %% ~~Describe \code{\dots} here~~
+#' @export
 summ.lmer <- function(x, ...) {
                ret <- c(AIC = AIC(x@logLik), BIC= BIC(x@logLik), logLik=x@logLik)
                ret
 }
 
+
+
+#' Alternative print -- generic
+#' 
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param x %% ~~Describe \code{x} here~~
+#' @param \dots %% ~~Describe \code{\dots} here~~
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (x, ...) 
+#' {
+#'     UseMethod("pr")
+#'   }
+#' 
+#' @export
 pr <- function(x,...) {
    # print to cut and paste as input
    UseMethod("pr")
 }
+
+
+#' Alternative print -- should probably use dput
+#' 
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param x %% ~~Describe \code{x} here~~
+#' @param pre %% ~~Describe \code{pre} here~~
+#' @param \dots %% ~~Describe \code{\dots} here~~
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (x, pre = "\t", ...) 
+#' {
+#'     for (xx in x) cat(pre, "\"", xx, "\",\n", sep = "")
+#'     invisible(x)
+#'   }
+#' 
+#' @export
 pr.default <- function(x,pre="\t",...) {
           # cat('\nc(')
           for ( xx in x) cat(pre,'"',xx,'",\n',sep='')
@@ -2460,6 +5460,52 @@ pr.default <- function(x,pre="\t",...) {
 ## reorder.default <- function(x,...) reorder( factor(x),...)  # so reorder works on non-factors
 
 
+
+
+#' Q matrix of QR decomposion with missing data
+#' 
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param x %% ~~Describe \code{x} here~~
+#' @param verbose %% ~~Describe \code{verbose} here~~
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (x, verbose = 0) 
+#' {
+#'     miss <- apply(x, 1, function(xx) any(is.na(xx)))
+#'     xc <- x[!miss, ]
+#'     qf <- qr.Q(qqr <- qr(xc))
+#'     if (verbose > 0) {
+#'         cat("xc:", dim(xc), "\n")
+#'         cat("qf:", dim(qf), "\n")
+#'         print(qf)
+#'     }
+#'     if (ncol(xc) > ncol(qf)) 
+#'         xc <- xc[, 1:ncol(qf)]
+#'     ip <- sign(apply(qf * xc, 2, sum))
+#'     qf <- qf * rep(ip, rep(nrow(qf), length(ip)))
+#'     ret <- array(NA, dim = c(nrow(x), ncol(qf)))
+#'     rownames(ret) <- rownames(x)
+#'     colnames(ret) <- colnames(xc)
+#'     ret[!miss, ] <- qf
+#'     attr(ret, "rank") <- qqr$rank
+#'     attr(ret, "miss") <- miss
+#'     ret
+#'   }
+#' 
+#' @export
 Q <- function(x, verbose = 0) {
     # find the Q matrix of a qr decomposition with possible NAs
     miss <- apply(x, 1, function(xx) any(is.na(xx)))
@@ -2484,10 +5530,39 @@ Q <- function(x, verbose = 0) {
     ret
 }
 
+
+
+
+
+#' Generic function to extend 'contrasts' to 'lmer' objects.
+#' 
+#' Generic function to extend 'contrasts' to 'lmer' objects.
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param x %% ~~Describe \code{x} here~~
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (x) 
+#' UseMethod("Contrasts")
+#' 
+#' @export
 Contrasts <- function(x) UseMethod("Contrasts")
 
+#' @export
 Contrasts.default <- function(x) contrasts(x)
 
+#' @export
 Contrasts.lmer <- function(x) {
        dd <- x@frame[1,]
        ret <- list()
@@ -2497,9 +5572,20 @@ Contrasts.lmer <- function(x) {
        }
        vv
 }
-
-
-comp.old <- function(fit, form, varname, varpattern = vname, data = fit@frame, ...) {
+#' Older version of comp
+#' 
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param fit %% ~~Describe \code{fit} here~~
+#' @param form %% ~~Describe \code{form} here~~
+#' @param varname %% ~~Describe \code{varname} here~~
+#' @param varpattern %% ~~Describe \code{varpattern} here~~
+#' @param data %% ~~Describe \code{data} here~~
+#' @param \dots %% ~~Describe \code{\dots} here~~
+#' @export
+comp.old <- function(fit, form, varname, varpattern = vname, data = getElement(fit,'frame'), ...) {
      ## Computing regression components
      ## currently works form lmer only
      ## idea is to return a data frame with value a variable and corresponding fitted values
@@ -2522,7 +5608,24 @@ comp.old <- function(fit, form, varname, varpattern = vname, data = fit@frame, .
 
 
 
-comp.bak <- function(fit, form, varname, varpattern = vname, data = fit@frame, ...) {
+
+
+
+
+#' Backup of former version of comp
+#' 
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param fit %% ~~Describe \code{fit} here~~
+#' @param form %% ~~Describe \code{form} here~~
+#' @param varname %% ~~Describe \code{varname} here~~
+#' @param varpattern %% ~~Describe \code{varpattern} here~~
+#' @param data %% ~~Describe \code{data} here~~
+#' @param \dots %% ~~Describe \code{\dots} here~~
+#' @export
+comp.bak <- function(fit, form, varname, varpattern = vname, data = getElement(fit,'frame'), ...) {
      ## Computing regression components
      ## currently works form lmer only
      ## idea is to return a data frame with value a variable and corresponding fitted values
@@ -2557,6 +5660,23 @@ comp.bak <- function(fit, form, varname, varpattern = vname, data = fit@frame, .
 }
 
 
+
+
+
+
+#' Prediction for 'lmer' objects
+#' 
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param fit %% ~~Describe \code{fit} here~~
+#' @param form %% ~~Describe \code{form} here~~
+#' @param varname %% ~~Describe \code{varname} here~~
+#' @param varpattern %% ~~Describe \code{varpattern} here~~
+#' @param data %% ~~Describe \code{data} here~~
+#' @param \dots %% ~~Describe \code{\dots} here~~
+#' @export
 comp <- function(fit, form = terms(fit), varname, varpattern = "", data = getData(fit), ...) {
 # this is the version that worked for RDC code
 # the version only returns the adjusted predicted value
@@ -2564,7 +5684,7 @@ comp <- function(fit, form = terms(fit), varname, varpattern = "", data = getDat
 # correspondence between components and data values.
 # With 'na.comp' the components are padded to match the original data.
 # and can do so in a form that conforms to the original data mat
-## for lmer: data = fit@frame
+## for lmer: data = getElement(fit,'frame')
      ## Computing regression components
      ## currently works for lmer only
      ## idea is to return a data frame with value a variable and corresponding fitted values
@@ -2589,10 +5709,13 @@ comp <- function(fit, form = terms(fit), varname, varpattern = "", data = getDat
      ##        'na.action = na.omit' for '...'
      ##
      
+#' @export
      getData <- function(x,...) UseMethod("getData")
 #     getData.lme <- function(x) x$data
+#' @export
      getData.lme <- function(x,...) nlme:::getData(x,...)
-     getData.lmer <- function(x) x@frame
+#' @export
+     getData.lmer <- function(x) getElement(x,'frame')
      disp(form)
      disp( dim(data))
      model.mat <- model.matrix(form, data,...)
@@ -2607,6 +5730,22 @@ comp <- function(fit, form = terms(fit), varname, varpattern = "", data = getDat
 
 
 
+
+
+
+
+#' Prediction with 'lmer' objects
+#' 
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param fit %% ~~Describe \code{fit} here~~
+#' @param varpattern %% ~~Describe \code{varpattern} here~~
+#' @param form %% ~~Describe \code{form} here~~
+#' @param data %% ~~Describe \code{data} here~~
+#' @param \dots %% ~~Describe \code{\dots} here~~
+#' @export
     com <- function(fit, varpattern = "", form = terms(fit), data = getData(fit), ...) {
     # this is a new version of 'comp' that
     # only returns the adjusted predicted value
@@ -2641,7 +5780,7 @@ comp <- function(fit, form = terms(fit), varname, varpattern = "", data = getDat
 
          getData <- function(x) UseMethod("getData")
          getData.lme <- function(x) x$data
-         getData.lmer <- function(x) x@frame
+         getData.lmer <- function(x) getElement(x,'frame')
          #disp(form)
          #disp( dim(data))
          model.mat <- model.matrix(form, data,...)
@@ -2658,7 +5797,14 @@ comp <- function(fit, form = terms(fit), varname, varpattern = "", data = getDat
          ret
     }
 
-    na.com <- function( fit, ...) {
+
+
+#' Apply com with NAs
+#' 
+#' @param fit %% ~~Describe \code{fit} here~~
+#' @param \dots %% ~~Describe \code{\dots} here~~
+#' @export
+na.com <- function( fit, ...) {
         ret <- com(fit,...)
         prs <- attributes(ret)$predictors
         ret <- na.pad( fit, ret)
@@ -2666,8 +5812,21 @@ comp <- function(fit, form = terms(fit), varname, varpattern = "", data = getDat
         ret
     }
 
-    na.comres <- function( fit, varp = "", level = 0, ...) na.com( fit, varp = varp, ...) + na.resid(fit, level = level)
-    na.getResponse <- function( fit) na.pad( fit, getResponse(fit))
+
+
+#' Compute residuals from component with NAs
+#' 
+#' @param fit %% ~~Describe \code{fit} here~~
+#' @param varp %% ~~Describe \code{varp} here~~
+#' @param level %% ~~Describe \code{level} here~~
+#' @param \dots %% ~~Describe \code{\dots} here~~
+#' @export
+na.comres <- function( fit, varp = "", level = 0, ...) na.com( fit, varp = varp, ...) + na.resid(fit, level = level)
+#' Response with NAs
+#' 
+#' @param fit %% ~~Describe \code{fit} here~~
+#' @export
+na.getResponse <- function( fit) na.pad( fit, getResponse(fit))
 
     #length(names(na.comp(fit.moda.age,varp='Month')))
     #dim(dd)
@@ -2675,6 +5834,14 @@ comp <- function(fit, form = terms(fit), varname, varpattern = "", data = getDat
 
 #  glh( fit, Lall(fit, 'Wave'))
 
+
+
+
+
+#' Extended svd
+#' 
+#' @param x %% ~~Describe \code{x} here~~
+#' @export
 cond <- function(x) {
      # reporting on conditioning of matrix
      Svd <- svd(x)
@@ -2682,15 +5849,42 @@ cond <- function(x) {
      #if(nrow(x) == ncol(x)) ret <- c(ret, cor= list(cor(x)))
      ret
 }
-
-
-
+#' Version of Vcov used in RDC
+#' 
+#' @param fit %% ~~Describe \code{fit} here~~
+#' @param L %% ~~Describe \code{L} here~~
+#' @export
 Vcov.rdc <- function( fit, L  = Lmat(fit,"") ) {
      # variance of etahat = L beta.hat
      vc <- getFix(fit)$vcov
      L %*% vc %*% t(L)
 }
-
+#' Version of Vcor used in RDC
+#' 
+#' @param fit %% ~~Describe \code{fit} here~~
+#' @param L %% ~~Describe \code{L} here~~
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (fit, L = Lmat(fit, "")) 
+#' {
+#'     ret <- cov2cor(vc <- Vcov(fit, L))
+#'     sv <- svd(vc)$d
+#'     attr(ret, "condition") <- sv[1]/sv[length(sv)]
+#'     attr(ret, "class") <- "correl"
+#'     ret
+#'   }
+#' 
+#' @export
 Vcor.rdc <- function(fit, L = Lmat(fit,"")) {
      ret <- cov2cor(vc <- Vcov(fit, L))
      sv <- svd(vc)$d
@@ -2701,6 +5895,41 @@ Vcor.rdc <- function(fit, L = Lmat(fit,"")) {
 }
 
 
+
+
+#' print correlations
+#' 
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param x %% ~~Describe \code{x} here~~
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (x) 
+#' {
+#'     correl <- format(round(x, 3), nsmall = 3, digits = 4)
+#'     correl[!lower.tri(correl)] <- ""
+#'     if (!is.null(cond <- attr(correl, "condition"))) {
+#'         attr(correl, "condition") <- NULL
+#'     }
+#'     print(correl, quote = FALSE)
+#'     if (!is.null(cond)) 
+#'         cat("Condition:", cond, "\n")
+#'     invisible(x)
+#'   }
+#' 
+#' @export
 print.correl <- function(x) {
       correl <- format(round(x, 3), nsmall = 3,
                   digits = 4)
@@ -2714,6 +5943,110 @@ print.correl <- function(x) {
 }
 
 
+
+
+#' Test version of glh in RDC
+#' 
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param fit %% ~~Describe \code{fit} here~~
+#' @param Llist %% ~~Describe \code{Llist} here~~
+#' @param help %% ~~Describe \code{help} here~~
+#' @param clevel %% ~~Describe \code{clevel} here~~
+#' @param debug %% ~~Describe \code{debug} here~~
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (fit, Llist, help = F, clevel = 0.95, debug = F) 
+#' {
+#'     if (help) {
+#'         cat("help!!!")
+#'         return(0)
+#'     }
+#'     if (!is.list(Llist)) 
+#'         Llist <- list(Llist)
+#'     ret <- list()
+#'     fix <- getFix(fit)
+#'     beta <- fix$fixed
+#'     vc <- fix$vcov
+#'     dfs <- fix$df
+#'     for (ii in 1:length(Llist)) {
+#'         ret[[ii]] <- list()
+#'         L <- rbind(zz <- Llist[[ii]])
+#'         heading <- attr(zz, "heading")
+#'         nam <- names(Llist)[ii]
+#'         qqr <- qr(t(L))
+#'         L.rank <- qqr$rank
+#'         L.full <- t(qr.Q(qqr))[1:L.rank, , drop = F]
+#'         if (F) {
+#'             cat("\n+++++++++++++++++++\n")
+#'             print(nam)
+#'             print(L)
+#'             print(svd(L)$d)
+#'             print(L.full)
+#'             print(svd(L.full)$d)
+#'         }
+#'         if (debug) {
+#'             print(L)
+#'             print(dim(L.full))
+#'             print(dim(vc))
+#'         }
+#'         vv <- L.full %*% vc %*% t(L.full)
+#'         eta.hat <- L.full %*% beta
+#'         Fstat <- (t(eta.hat) %*% qr.solve(vv, eta.hat))/L.rank
+#'         Fstat2 <- (t(eta.hat) %*% solve(vv) %*% eta.hat)/L.rank
+#'         included.effects <- apply(L, 2, function(x) sum(abs(x))) != 
+#'             0
+#'         denDF <- min(dfs[included.effects])
+#'         numDF <- L.rank
+#'         ret.anova <- rbind(c(numDF, denDF, Fstat, Fstat2, pf(Fstat, 
+#'             numDF, denDF, lower.tail = F)))
+#'         colnames(ret.anova) <- c("numDF", "denDF", "F value", 
+#'             "F2", "Pr(>F)")
+#'         rownames(ret.anova) <- nam
+#'         ret[[ii]]$anova <- ret.anova
+#'         etahat <- L %*% beta
+#'         etavar <- L %*% vc %*% t(L)
+#'         etasd <- sqrt(diag(etavar))
+#'         denDF <- apply(L, 1, function(x, dfs) min(dfs[x != 0]), 
+#'             dfs = dfs)
+#'         aod <- cbind(c(etahat), etasd, denDF, c(etahat/etasd), 
+#'             2 * pt(-abs(etahat/etasd), denDF))
+#'         colnames(aod) <- c("Estimate", "Std.Error", "DF", "t value", 
+#'             "Pr(>|t|)")
+#'         if (!is.null(clevel)) {
+#'             hw <- qt(1 - (1 - clevel)/2, denDF) * etasd
+#'             aod <- cbind(aod, LL = etahat - hw, UL = etahat + 
+#'                 hw)
+#'             labs <- paste(c("Lower", "Upper"), format(clevel))
+#'             colnames(aod)[ncol(aod) + c(-1, 0)] <- labs
+#'         }
+#'         rownames(aod) <- rownames(L)
+#'         ret[[ii]]$estimate <- aod
+#'         ret[[ii]]$vcov <- Vcov(fit, L)
+#'         ret[[ii]]$vcor <- Vcor(fit, L)
+#'         ret[[ii]]$L <- L
+#'         ret[[ii]]$L.full <- L.full
+#'         if (!is.null(heading)) 
+#'             attr(ret[[ii]], "heading") <- heading
+#'     }
+#'     names(ret) <- names(Llist)
+#'     attr(ret, "class") <- "glh"
+#'     ret
+#'   }
+#' 
+#' @export
 glh.rdc <- function(fit, Llist, help = FALSE, clevel = 0.95, debug = FALSE) {
     if(help) {
          cat("help!!!")
@@ -2780,6 +6113,31 @@ glh.rdc <- function(fit, Llist, help = FALSE, clevel = 0.95, debug = FALSE) {
         if( !is.null(clevel) ) {
             hw <- qt( 1-(1-clevel)/2, denDF) * etasd
             aod <- cbind(aod, LL = etahat - hw, UL = etahat + hw)
+
+
+#' Add labels -- generic
+#' 
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param x %% ~~Describe \code{x} here~~
+#' @param \dots %% ~~Describe \code{\dots} here~~
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (x, ...) 
+#' UseMethod("labs")
+#' 
             labs <- paste( c("Lower","Upper"), format(clevel))
             colnames(aod)[ ncol(aod) + c(-1,0)] <- labs
 
@@ -2805,6 +6163,48 @@ glh.rdc <- function(fit, Llist, help = FALSE, clevel = 0.95, debug = FALSE) {
 
 
 
+
+
+#' Format a coefficient table
+#' 
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param x %% ~~Describe \code{x} here~~
+#' @param digits %% ~~Describe \code{digits} here~~
+#' @param pdigits %% ~~Describe \code{pdigits} here~~
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (x, digits = 6, pdigits = digits - 1) 
+#' {
+#'     pformat <- function(x, digits) {
+#'         x <- format(xx <- round(x, digits))
+#'         x[as.double(xx) == 0] <- paste(c("<.", rep("0", digits - 
+#'             1), "1"), collapse = "")
+#'         x
+#'     }
+#'     xx <- array("", dim = dim(x), dimnames = dimnames(x))
+#'     for (i in 1:ncol(xx)) {
+#'         xx[, i] <- format(round(x[, i], digits), digits = digits)
+#'     }
+#'     if (length(isp <- grep("^Pr\(", colnames(x))) > 0) {
+#'         xx[, isp[1]] <- pformat(x[, isp[1]], digits = pdigits)
+#'     }
+#'     xx
+#'   }
+#' 
+#' @export
 formatCoefmat <- function(x ,digits = 6, pdigits = digits-1 ) {
      pformat <- function(x, digits) {
              x <- format(xx <- round(x,digits))
@@ -2822,6 +6222,72 @@ formatCoefmat <- function(x ,digits = 6, pdigits = digits-1 ) {
      xx
 }
 
+
+
+#' Print a 'glh' object tested in RDC
+#' 
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param x %% ~~Describe \code{x} here~~
+#' @param round %% ~~Describe \code{round} here~~
+#' @param pround %% ~~Describe \code{pround} here~~
+#' @param L %% ~~Describe \code{L} here~~
+#' @param cov %% ~~Describe \code{cov} here~~
+#' @param \dots %% ~~Describe \code{\dots} here~~
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (x, round = 6, pround = round - 1, L = T, cov = T, ...) 
+#' {
+#'     rnd <- function(x, digits) {
+#'         if (is.numeric(x)) 
+#'             x <- round(x, digits = digits)
+#'         format(x)
+#'     }
+#'     for (ii in 1:length(x)) {
+#'         nn <- names(x)[[ii]]
+#'         tt <- x[[ii]]
+#'         ta <- tt$anova
+#'         tap <- array("", dim = dim(ta), dimnames = dimnames(ta))
+#'         cat("\n", nn, "\n", sep = "")
+#'         print(formatCoefmat(ta, digits = round, pdigits = pround), 
+#'             quote = F, right = T)
+#'         cat("\n")
+#'         te <- tt$estimate
+#'         if (!is.null(zhead <- attr(tt, "heading"))) 
+#'             cat(zhead, "\n")
+#'         print(formatCoefmat(te, digits = round, pdigits = pround), 
+#'             quote = F, right = T)
+#'         if (L == T) {
+#'             cat("\nL:\n")
+#'             print(tt$L)
+#'             if (dim(tt$L.full)[1] < dim(tt$L)[1]) {
+#'                 cat("\nL (full rank):\n")
+#'                 print(tt$L.full)
+#'             }
+#'         }
+#'         if (cov == T) {
+#'             cat("\nVar-Cov of estimates:\n")
+#'             print(tt$vcov)
+#'             cat("\nCorrelations:\n")
+#'             print(tt$vcor)
+#'         }
+#'     }
+#'     invisible(x)
+#'   }
+#' 
+#' @export
 print.glh.rdc <- function(x, round = 6, pround = round - 1, L  = TRUE, cov = TRUE, ...) {
      # should round by SD, i.e. keep 3 sig digits for sd and others rounded accordingly
 
@@ -2882,6 +6348,32 @@ print.glh.rdc <- function(x, round = 6, pround = round - 1, L  = TRUE, cov = TRU
 
 ####################################################
 ####################################################  ABOVE is OKAY
+
+
+#' Extended anova
+#' 
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param object %% ~~Describe \code{object} here~~
+#' @param \dots %% ~~Describe \code{\dots} here~~
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (object, ...) 
+#' UseMethod("xanova")
+#' 
+#' @export
 xanova <- function(object,...) UseMethod("xanova")
 
 #xanova.lmer <- function(fit, Llist ) {
@@ -2889,6 +6381,64 @@ xanova <- function(object,...) UseMethod("xanova")
 #}
 
 
+
+
+#' Modified Anova for lmer objects
+#' 
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param fit %% ~~Describe \code{fit} here~~
+#' @param Llist %% ~~Describe \code{Llist} here~~
+#' @param df %% ~~Describe \code{df} here~~
+#' @param clevel %% ~~Describe \code{clevel} here~~
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (fit, Llist, df = NULL, clevel = 0.95) 
+#' {
+#'     warning("xanova.lmer uses Chi-Square tests")
+#'     ret <- list()
+#'     for (ii in 1:length(Llist)) {
+#'         L <- rbind(Llist[[ii]])
+#'         QR <- qr(L)
+#'         R <- qr.R(QR)
+#'         dfH <- QR$rank
+#'         eta <- R %*% fixef(fit)
+#'         vv <- R %*% vcov(fit) %*% t(R)
+#'         chisq <- t(eta) %*% qr.solve(vv, eta)
+#'         test <- list(ChiSquare = chisq, DF = dfH, `p-value` = 1 - 
+#'             pchisq(chisq, dfH))
+#'         ret[[ii]]$anova <- test
+#'         eta <- L %*% fixef(fit)
+#'         vv <- diag(L %*% vcov(fit) %*% t(L))
+#'         etasd <- sqrt(vv)
+#'         zval <- c(eta/etasd)
+#'         aod <- cbind(Estimate = c(eta), Std.Error = etasd, `z-value` = zval, 
+#'             `p-value` = 2 * pnorm(-abs(zval)))
+#'         if (!is.null(clevel)) {
+#'             hw <- qnorm(1 - (1 - clevel)/2) * etasd
+#'             aod <- cbind(aod, LL = eta - hw, UL = eta + hw)
+#'             labs <- paste(c("Lower", "Upper", format(clevel)))
+#'             colnames(aod)[ncol(aod) + c(-1, 0)] <- labs
+#'         }
+#'         aod <- as.data.frame(aod)
+#'         class(aod) <- c("estimate.lme", "data.frame")
+#'         ret[[ii]]$estimate <- aod
+#'     }
+#'   }
+#' 
+#' @export
 xanova.lmer <- function( fit, Llist , df = NULL, clevel = .95) {
        # performs a Wald test on an object that has a fixef and a vcov methods
        warning("xanova.lmer uses Chi-Square tests")
@@ -2938,6 +6488,44 @@ xanova.lmer <- function( fit, Llist , df = NULL, clevel = .95) {
 
 
 
+
+
+#' Read coding tables in RDC
+#' 
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param x %% ~~Describe \code{x} here~~
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (x) 
+#' {
+#'     tonum <- function(x) as.numeric(gsub(",", "", as.character(x)))
+#'     ff <- function(x) format(x, big.mark = ",")
+#'     tran.table <- scan(what = list("character", "integer", "character", 
+#'         "character"), flush = T)
+#'     sam <- tonum(tran.table[[3]])
+#'     pop <- tonum(tran.table[[4]])
+#'     samp.pct <- 100 * (sam/pop)/(sum(sam, na.rm = T)/sum(pop, 
+#'         na.rm = T))
+#'     print(data.frame(Code = tran.table[[2]], Content = tran.table[[1]], 
+#'         Sample = ff(sam), Popn = ff(pop), Sampling.Pct = round(samp.pct, 
+#'             1)))
+#'     tran(tran.table[[2]], tran.table[[1]], x, tofactor = T)
+#'   }
+#' 
+#' @export
 enc <- function(x) {
 		## this function will use the coding table in Stats Can documentation
 		## to create a factor with the right names
@@ -2956,6 +6544,47 @@ enc <- function(x) {
 		tran( tran.table[[2]], tran.table[[1]], x , tofactor = TRUE)
 	}
 
+
+
+
+
+#' Transform a frequency table to percentages
+#' 
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param x %% ~~Describe \code{x} here~~
+#' @param MARGIN %% ~~Describe \code{MARGIN} here~~
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (x, MARGIN = 1) 
+#' {
+#'     if (length(dim(x)) == 1) {
+#'         ret <- cbind(N = x, pct = 100 * x/sum(x, na.rm = T))
+#'         ret <- rbind(ret, Total = apply(ret, 2, sum, na.rm = T))
+#'         print(round(ret, 1))
+#'         return(invisible(ret))
+#'     }
+#'     ret <- list(N = atotal(x), pct = 100 * acond(x, MARGIN))
+#'     cat("\nN:\n")
+#'     print(ret[[1]])
+#'     cat("\nPercentage:\n")
+#'     print(round(ret[[2]], 1))
+#'     invisible(ret)
+#'   }
+#' 
+#' @export
 apct <- function(x,MARGIN=1) {
 		if( length(dim(x)) == 1) {
 			ret <- cbind( N = x, pct = 100*x/sum(x,na.rm=T))
@@ -2972,10 +6601,142 @@ apct <- function(x,MARGIN=1) {
 		invisible(ret)
 	}
 
+
+
+
+
+#' Percentages of a column or row sum
+#' 
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param x %% ~~Describe \code{x} here~~
+#' @param MARGIN %% ~~Describe \code{MARGIN} here~~
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (x, MARGIN = 1) 
+#' {
+#'     if (length(dim(x)) == 1) {
+#'         ret <- cbind(N = x, pct = 100 * x/sum(x, na.rm = T))
+#'         ret <- rbind(ret, Total = apply(ret, 2, sum, na.rm = T))
+#'         print(round(ret, 1))
+#'         return(invisible(ret))
+#'     }
+#'     ret <- list(N = atotal(x), pct = 100 * acond(x, MARGIN))
+#'     cat("\nN:\n")
+#'     print(ret[[1]])
+#'     cat("\nPercentage:\n")
+#'     print(round(ret[[2]], 1))
+#'     invisible(ret)
+#'   }
+#' 
   arep <- apct   # old names
 
 ## From library gm
 
+
+
+#' Modified version of write.sas
+#' 
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param df %% ~~Describe \code{df} here~~
+#' @param datafile %% ~~Describe \code{datafile} here~~
+#' @param codefile %% ~~Describe \code{codefile} here~~
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (df, datafile = "G:/SAS/R2SAS.txt", codefile = "G:/SAS/R2SAS.sas") 
+#' {
+#'     debug <- F
+#'     pr <- function(x) {
+#'         cat(deparse(substitute(x)), "\n")
+#'         print(x)
+#'         cat("==========\n")
+#'         cat(x)
+#'         cat("\n=============\n")
+#'     }
+#'     lrecl <- 256
+#'     if (!debug) {
+#'         write.table(df, file = datafile, row = FALSE, col = FALSE, 
+#'             sep = ";", na = ".")
+#'         lines <- scan(file = datafile, what = list("character"), 
+#'             sep = "\n")
+#'         lrecl <- max(nchar(lines))
+#'     }
+#'     nms <- names(df)
+#'     nms.sas <- gsub("\.", "_", nms)
+#'     if (length(unique(toupper(nms.sas))) != length(nms.sas)) {
+#'         ind <- duplicated(toupper(nms.sas))
+#'         ind.rev <- duplicated(rev(toupper(nms.sas)))
+#'         cat("Warning:\n")
+#'         cat("The following R names may yield duplicate SAS names", 
+#'             "\n", paste(nms[ind | rev(ind.rev)], collapse = " "), 
+#'             "\n")
+#'         warning("Possible duplicate SAS names")
+#'     }
+#'     factors <- sapply(df, is.factor) | sapply(df, is.character)
+#'     classes <- sapply(df, class)
+#'     odd.classes <- setdiff(sapply(df, class), c("numeric", "factor", 
+#'         "character"))
+#'     if (length(odd.classes) > 0) {
+#'         cat("Warning:\n")
+#'         cat("The following variables have classes that might not be handled properly by SAS\n")
+#'         print(classes[grep(odd.classes, classes)])
+#'         cat("\n")
+#'     }
+#'     factor.names <- nms[factors]
+#'     factor.names.sas <- nms.sas[factors]
+#'     dollarsign <- ifelse(factors, "$", "")
+#'     factor.lengths <- sapply(df[factor.names], function(x) {
+#'         if (is.factor(x)) 
+#'             max(nchar(levels(x)))
+#'         else max(nchar(x))
+#'     })
+#'     length.stmt <- paste(paste("   ", factor.names.sas, "$", 
+#'         factor.lengths, "\n"), collapse = "")
+#'     length.stmt <- paste("LENGTH\n", length.stmt, ";\n")
+#'     if (debug) 
+#'         pr(length.stmt)
+#'     input.stmt <- paste(paste("    ", nms.sas, dollarsign, "\n"), 
+#'         collapse = "")
+#'     input.stmt <- paste("INPUT\n", input.stmt, ";\n")
+#'     if (debug) 
+#'         pr(input.stmt)
+#'     code <- paste("filename r2sas '", datafile, "';\n", "libname to 'G:/SAS';\n", 
+#'         "data to.r2sas;\n", "infile r2sas delimiter=';' dsd LRECL =", 
+#'         lrecl + 100, ";\n", sep = "")
+#'     code <- paste(code, length.stmt, input.stmt, "\nrun;\n")
+#'     if (debug) 
+#'         pr(code)
+#'     if (!debug) 
+#'         cat(code, file = codefile)
+#'     invisible(0)
+#'   }
+#' 
+#' @export
 write.sas <- function( df , datafile="G:/SAS/R2SAS.txt", codefile = "G:/SAS/R2SAS.sas"){
 	debug <- F
 	pr <- function(x) {
@@ -3084,6 +6845,61 @@ td <- function( basecol = NULL, col = c(3,5,4,6,7,8,2), lty = 1:7,
 } # end of F
 
 
+
+
+
+
+#' Capitalize first character of each word
+#' 
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param x %% ~~Describe \code{x} here~~
+#' @param tofactor %% ~~Describe \code{tofactor} here~~
+#' @param stop %% ~~Describe \code{stop} here~~
+#' @param blanks %% ~~Describe \code{blanks} here~~
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (x, tofactor = is.factor(x), stop = c(" The", " Of", 
+#'     " By", " To", " And"), blanks = c(" ", "(", "\"", "/", "+")) 
+#' {
+#'     under2blank <- T
+#'     if (is.factor(x)) {
+#'         ret <- cap1(levels(x))
+#'         if (length(unique(ret)) != length(ret)) 
+#'             warning("factor levels have been shortened")
+#'         levels(x) <- ret
+#'         return(x)
+#'     }
+#'     ret <- as.character(x)
+#'     for (ii in 1:length(ret)) {
+#'         z <- ret[[ii]]
+#'         if (under2blank) 
+#'             z <- gsub("_", " ", z)
+#'         n <- nchar(z)
+#'         z <- substring(z, 1:n, 1:n)
+#'         zu <- toupper(z)
+#'         zl <- tolower(z)
+#'         zb <- c(" ", zu[-n])
+#'         z <- paste(ifelse(zb %in% blanks, zu, zl), collapse = "")
+#'         for (ss in stop) z <- gsub(ss, tolower(ss), z)
+#'         ret[[ii]] <- z
+#'     }
+#'     ret
+#'   }
+#' 
+#' @export
 cap1 <- function(x, tofactor = is.factor(x),
 		stop=c(" The"," Of"," By"," To"," And"),
 		blanks=c(" ","(","\"","/","+")) {
@@ -3111,6 +6927,55 @@ cap1 <- function(x, tofactor = is.factor(x),
 	ret
 }
 
+
+
+#' Translate elements of a vector
+#' 
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param from %% ~~Describe \code{from} here~~
+#' @param to %% ~~Describe \code{to} here~~
+#' @param x %% ~~Describe \code{x} here~~
+#' @param tofactor %% ~~Describe \code{tofactor} here~~
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (from, to, x, tofactor = is.factor(x)) 
+#' {
+#'     if (is.factor(from)) 
+#'         from <- as.character(from)
+#'     if (is.factor(to)) 
+#'         to <- as.character(to)
+#'     to <- rep(to, length = length(from))
+#'     ret <- x
+#'     if (is.factor(x)) {
+#'         ret <- as.character(ret)
+#'         levs <- levels(x)
+#'     }
+#'     ret <- c(to, unique(ret))[match(ret, c(from, unique(ret)))]
+#'     if (tofactor) {
+#'         if (is.factor(x)) 
+#'             tolevs <- tran(from, to, levs)
+#'         else tolevs <- to
+#'         tolevs <- c(tolevs, unique(ret))
+#'         tolevs <- intersect(tolevs, unique(ret))
+#'         ret <- factor(ret, levels = tolevs)
+#'     }
+#'     ret
+#'   }
+#' 
+#' @export
 tran <- function( from, to, x, tofactor = is.factor(x)) {
 	# This should return something like 'to' whenever all of 'x'
 	# is in 'from'
@@ -3139,8 +7004,62 @@ tran <- function( from, to, x, tofactor = is.factor(x)) {
     ret
 }
 
+
+
+#' Translate elements of a character vector
+#' 
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param x %% ~~Describe \code{x} here~~
+#' @param from %% ~~Describe \code{from} here~~
+#' @param to %% ~~Describe \code{to} here~~
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (x, from, to) 
+#' tran(from, to, x)
+#' 
+#' @export
 tr <- function( x, from , to ) tran( from, to, x)
 
+
+
+#' Apply a mapping to a vector
+#' 
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param from %% ~~Describe \code{from} here~~
+#' @param to %% ~~Describe \code{to} here~~
+#' @param x %% ~~Describe \code{x} here~~
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (from, to, x) 
+#' to[match(x, from)]
+#' 
+#' @export
 map <- function( from, to, x ) to[ match( x, from) ]
 
 if ( FALSE){
@@ -3153,6 +7072,7 @@ if ( FALSE){
 
 
 
+#' @export
 abind.rdc <- function( arr1, arr2, d, facename = "") {
 	# glue arr1 to arr2 along dimension d (i.e. face 'not d')
 	# copied from library gm 05 05 03
@@ -3204,6 +7124,64 @@ abind.rdc <- function( arr1, arr2, d, facename = "") {
 
 # acond( with(dds, table( lang, prov)),2)
 
+
+
+
+
+#' Version of atotal in RDC
+#' 
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param arr %% ~~Describe \code{arr} here~~
+#' @param FUN %% ~~Describe \code{FUN} here~~
+#' @param name %% ~~Describe \code{name} here~~
+#' @param \dots %% ~~Describe \code{\dots} here~~
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (arr, FUN = sum, name = "Total", ...) 
+#' {
+#'     d <- dim(arr)
+#'     if (length(d) == 1) {
+#'         arr <- c(arr)
+#'         d <- dim(arr)
+#'     }
+#'     if (is.character(FUN)) 
+#'         FUN <- get(FUN, mode = "function")
+#'     else if (mode(FUN) != "function") {
+#'         farg <- substitute(FUN)
+#'         if (mode(farg) == "name") 
+#'             FUN <- get(farg, mode = "function")
+#'         else stop(paste("\"", farg, "\" is not a function", sep = ""))
+#'     }
+#'     if (is.null(d)) {
+#'         ret <- c(arr, FUN(arr))
+#'         names(ret)[length(ret)] = name
+#'         return(ret)
+#'     }
+#'     n <- length(d)
+#'     name <- rep(name, length = n)
+#'     ret <- arr
+#'     ind <- 1:n
+#'     for (i in n:1) {
+#'         new <- apply(ret, ind[-i], FUN, ...)
+#'         ret <- abind(ret, new, i, name[i])
+#'     }
+#'     ret
+#'   }
+#' 
+#' @export
 atotal.rdc <- function( arr, FUN = sum, name = "Total",...) {
 	# copied from library gm  05 05 03
 	# 05 05 03: added option for name
@@ -3246,12 +7224,153 @@ atotal.rdc <- function( arr, FUN = sum, name = "Total",...) {
     ##  extend to new classes by writing a 'na.pad' methoc
 
 
+
+
+#' Fitted values with NAs
+#' 
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param fit %% ~~Describe \code{fit} here~~
+#' @param \dots %% ~~Describe \code{\dots} here~~
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (fit, ...) 
+#' na.pad(fit, fitted(fit, ...))
+#' 
+#' @export
     na.fitted <- function(fit,...) na.pad( fit, fitted(fit,...))
+
+
+#' Add NAs -- resid
+#' 
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param fit %% ~~Describe \code{fit} here~~
+#' @param \dots %% ~~Describe \code{\dots} here~~
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (fit, ...) 
+#' na.pad(fit, resid(fit, ...))
+#' 
+#' @export
     na.resid <- function(fit,...) na.pad( fit, resid(fit,...))
+
+
+#' Residuals with NAs
+#' 
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param fit %% ~~Describe \code{fit} here~~
+#' @param \dots %% ~~Describe \code{\dots} here~~
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (fit, ...) 
+#' na.pad(fit, residuals(fit, ...))
+#' 
+#' @export
     na.residuals <- function(fit,...) na.pad( fit, residuals(fit,...))
     # na.predict <- function(fit,...) na.pad( fit, predict(x,...))
 
+
+
+#' Add NAs to match original data frame
+#' 
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param fit %% ~~Describe \code{fit} here~~
+#' @param \dots %% ~~Describe \code{\dots} here~~
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (fit, ...) 
+#' UseMethod("na.pad")
+#' 
+#' @export
     na.pad <- function(fit,...) UseMethod('na.pad')
+
+
+#' Add NAs -- lme
+#' 
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param x %% ~~Describe \code{x} here~~
+#' @param obj %% ~~Describe \code{obj} here~~
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (x, obj) 
+#' {
+#'     ind <- rep(NA, nrow(x$data))
+#'     names(ind) <- rn <- rownames(x$data)
+#'     ind.part <- 1:nrow(x$resid)
+#'     names(ind.part) <- rownames(x$resid)
+#'     ind[names(ind.part)] <- ind.part
+#'     if (!is.null(dim(obj))) 
+#'         ret <- obj[ind, ]
+#'     else ret <- obj[ind]
+#'     names(ret) <- rn
+#'     ret
+#'   }
+#' 
+#' @export
     na.pad.lme <- function( x, obj) {
         ind <- rep(NA, nrow(x$data))
         names(ind) <- rn <- rownames(x$data)
@@ -3266,6 +7385,35 @@ atotal.rdc <- function( arr, FUN = sum, name = "Total",...) {
         ret
     }
 
+
+
+#' Add NAs -- default
+#' 
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param x %% ~~Describe \code{x} here~~
+#' @param obj %% ~~Describe \code{obj} here~~
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (x, obj) 
+#' {
+#'     stop(paste("You need to write a method for na.pad for objects of class", 
+#'         class(x), "\n", "see na.pad.lme for an example"))
+#'   }
+#' 
+#' @export
     na.pad.default <- function(x,obj) {
         stop(paste("You need to write a method for na.pad for objects of class",class(x),"\n",
             "see na.pad.lme for an example"))
@@ -3286,6 +7434,58 @@ atotal.rdc <- function( arr, FUN = sum, name = "Total",...) {
 # subject to subject)
 
 
+
+
+#' Lag within subject: older less efficient version of Lag
+#' 
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param x %% ~~Describe \code{x} here~~
+#' @param id %% ~~Describe \code{id} here~~
+#' @param idx %% ~~Describe \code{idx} here~~
+#' @param lag %% ~~Describe \code{lag} here~~
+#' @param at %% ~~Describe \code{at} here~~
+#' @param check %% ~~Describe \code{check} here~~
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (x, id, idx, lag = 1, at = NULL, check = T) 
+#' {
+#'     if (check) {
+#'         comb <- paste(id, idx)
+#'         if (any(duplicated(comb))) 
+#'             stop("id not unique in each level of idx")
+#'     }
+#'     if (any(is.na(idx))) 
+#'         stop("NAs in idx")
+#'     if (any(round(idx) != idx)) 
+#'         stop("Non integers in idx")
+#'     ret <- x
+#'     id <- as.character(id)
+#'     names(x) <- id
+#'     for (i in max(idx):min(idx)) {
+#'         to.pos <- idx == i
+#'         if (is.null(at)) 
+#'             from <- x[idx == (i - lag)]
+#'         else from <- x[idx == at]
+#'         ids <- names(x[to.pos])
+#'         ret[to.pos] <- from[ids]
+#'     }
+#'     ret
+#'   }
+#' 
+#' @export
 Lag.0 <- function(x,id,idx,lag = 1,at= NULL, check=T) {
 	# computes Lagged values but without intrapolation
 	# adds 'at'
@@ -3344,6 +7544,64 @@ cLag <-
     ret[retnn]
   }
 
+
+
+#' 'Contextual' Lag with respect to time within id
+#' 
+#' Lag a vector with respect to time order
+#' 
+#' The function can also be called as \code{Lag} which is now deprecated to
+#' avoid conflicts with \code{Hmisc::Lag}. Use \code{cLagI} for
+#' intra(extra)polative lagging.
+#' 
+#' @aliases cLag Lag
+#' @param x vector of values to be lagged
+#' @param id identifies clusters within which lagging takes place
+#' @param time time variable for lagging, generally integer valued
+#' @param lag period for lagging: lag = 1 reaches one unit of \code{time} into
+#' the past. Negative numbers reach into the future.
+#' @param at uses the value of \code{x} at a particular value of \code{time}.
+#' e.g. \code{at = 1} returns the value of \code{x} corresponding to \code{time
+#' == 1}.
+#' @param check that \code{id/time} combinations are unique.
+#' @param idx for compatibility with a previous version.
+#' @return A vector of values of \code{x} lagged within levels of \code{id}.
+#' The value returned at \code{time == t} is the value of \code{x} at
+#' \code{time == t-1}.  If there is no observation for which \code{time == t-1}
+#' then the returned value is \code{NA}.  To lag to the previous value of
+#' \code{time}, one can use \code{rank}.  Consider, also, \code{\link{cLagI}}
+#' that intrapolates backwards one unit of \code{time}.
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso \code{\link{cLagI}}, \code{\link{cDiffI}}, \code{\link{capply}},
+#' \code{\link{up}} %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (x, id = rep(1, length(x)), time = 1:length(x), lag = 1, 
+#'     at = NULL, check = T, idx) 
+#' {
+#'     if (check) {
+#'         comb <- paste(id, time)
+#'         if (any(duplicated(comb))) 
+#'             stop("id not unique in each level of time")
+#'     }
+#'     if (!missing(idx)) 
+#'         time = idx
+#'     ret <- x
+#'     names(ret) <- paste(id, time, sep = "::")
+#'     retnn <- if (is.null(at)) 
+#'         paste(id, time - lag, sep = "::")
+#'     else paste(id, at, sep = "::")
+#'     ret[retnn]
+#'   }
+#' 
 Lag <- cLag # historical name that conflicts with Hmisc
 
  if(F) {
@@ -3354,6 +7612,7 @@ cbind( zid, zx, Lag(zx,zid,zx))
 }
 
 
+#' @export
 cLagI <- function(x,id,time,lag=1,delta=.01,check=T) {
     # renamed from LagI to avoid conflict with Hmisc
 	# lags by intrapolating 
@@ -3391,12 +7650,100 @@ cLagI <- function(x,id,time,lag=1,delta=.01,check=T) {
 	ret
 }
 
+
+
+#' Lag with respect to time within id with interpolation for non-integer time
+#' 
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @aliases LagI cLagI DiffI
+#' @param x the values to be lagged.
+#' @param id values are lagged within each level of id
+#' @param time measure of time used for lagging
+#' @param lag distance to lag: e.g. -1 takes the value of \code{x} 1 unit of
+#' \code{time} in the past.
+#' @param delta increment used for extrapolation
+#' @param check uniqueness of \code{id}/\code{time} combinations
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (x, id, time, lag = 1, delta = 0.01, check = T) 
+#' {
+#'     if (check) {
+#'         comb <- paste(id, time)
+#'         if (any(duplicated(comb))) 
+#'             stop("id not unique in each level of idx")
+#'     }
+#'     ret <- x
+#'     id <- as.character(id)
+#'     names(x) <- id
+#'     names(time) <- id
+#'     for (nn in unique(id)) {
+#'         pos <- id == nn
+#'         xx <- x[pos]
+#'         tt <- time[pos]
+#'         topred <- tt - delta
+#'         drop <- is.na(xx) | is.na(tt)
+#'         xxc <- xx[!drop]
+#'         ttc <- tt[!drop]
+#'         nl <- length(xxc)
+#'         if (nl > 0) {
+#'             if (nl > 1) 
+#'                 xx.p <- approx(ttc, xxc, topred)$y
+#'             else xx.p <- NA
+#'             xx.lag <- xx - lag * (xx - xx.p)/delta
+#'             ret[pos] <- xx.lag
+#'         }
+#'     }
+#'     ret
+#'   }
+#' 
+#' @export
 LagI <- cLagI
 
+#' @export
 cDiffI <- function(xx,...) {
 	xx - LagI(xx,...)
 }
 
+
+
+#' Difference between current value and lagged value within subject.
+#' 
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param xx %% ~~Describe \code{xx} here~~
+#' @param \dots %% ~~Describe \code{\dots} here~~
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (xx, ...) 
+#' {
+#'     xx - LagI(xx, ...)
+#'   }
+#' 
 DiffI <- cDiffI
 
 # tt <- c(1,2,3,1,2,3,1,2,3)
@@ -3410,6 +7757,7 @@ DiffI <- cDiffI
 ###
 
 
+#' @export
 qs <- function(x, knots=quantile(x,pc), exclude = 0, pc = c(.25,.75)) {
 	# simple quadratic spline
 	ret <- cbind(x,x^2)
@@ -3431,6 +7779,7 @@ qs <- function(x, knots=quantile(x,pc), exclude = 0, pc = c(.25,.75)) {
 
 
 
+#' @export
 lsp <- function(x, knots=quantile(x,pc), exclude = 0, pc = c(.25,.75)) {
 	# linear spline
 	ret <- cbind(x)
@@ -3449,6 +7798,7 @@ lsp <- function(x, knots=quantile(x,pc), exclude = 0, pc = c(.25,.75)) {
 	ret
 }
 
+#' @export
 cs <- function(x, knots=quantile(x,pc), exclude = 0, pc = c(.25,.75))  {
 	# simple cubic spline
     if ( missing(knots) ) warning("May be unsafe for prediction with newdata")
@@ -3465,6 +7815,44 @@ cs <- function(x, knots=quantile(x,pc), exclude = 0, pc = c(.25,.75))  {
 	ret
 }
 
+
+
+#' Matrix of powers
+#' 
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param x %% ~~Describe \code{x} here~~
+#' @param order %% ~~Describe \code{order} here~~
+#' @param exclude %% ~~Describe \code{exclude} here~~
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (x, order = 2, exclude = 0) 
+#' {
+#'     ret <- cbind(rep(1, length(x)))
+#'     for (i in 1:order) ret <- cbind(ret, x^i)
+#'     nam <- deparse(substitute(x))
+#'     powers <- paste(nam, "^", 0:order, sep = "")
+#'     powers[1] <- "Intercept"
+#'     powers[2] <- nam
+#'     dimnames(ret)[[2]] <- powers
+#'     if (!is.null(exclude)) 
+#'         ret <- ret[, -(1:(exclude + 1))]
+#'     ret
+#'   }
+#' 
+#' @export
 Poly <- function(x, order=2, exclude = 0)  {
 	# polynomial
 	# exclude: NULL to include intercept, otherwise exclude order up to 
@@ -3531,6 +7919,42 @@ if (F) {
 
 ## much better approach to stack:
 
+
+
+#' Stack data frames
+#' 
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param \dots %% ~~Describe \code{\dots} here~~
+#' @param vname %% ~~Describe \code{vname} here~~
+#' @param oname %% ~~Describe \code{oname} here~~
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (..., vname = ".type", oname = ".order") 
+#' {
+#'     z <- list(...)
+#'     for (ii in 1:length(z)) {
+#'         z[[ii]][, vname] <- rep(ii, nr <- nrow(z[[ii]]))
+#'         z[[ii]][, oname] <- 1:nr
+#'     }
+#'     ret <- z[[1]]
+#'     for (ii in 2:length(z)) ret <- merge(ret, z[[ii]], all = T)
+#'     ret[order(ret[[vname]], ret[[oname]]), ]
+#'   }
+#' 
+#' @export
 mergec <- function( ... ,vname = '.type',oname = ".order") {
 	
 	## stacks data frames adding a new variable .type to identify each source data frame
@@ -3563,6 +7987,168 @@ if(F) {
 ###
 ###
 
+
+
+#' Extended merge with diagnostics
+#' 
+#' Extended merge with diagnostics. This is a modification of \code{merge} that
+#' combines consistent variables even if not specified in 'by' to keep a common
+#' name.
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param x,y data frames, or objects to be coerced to one
+#' @param by %% ~~Describe \code{by} here~~
+#' @param all %% ~~Describe \code{all} here~~
+#' @param dropdots %% ~~Describe \code{dropdots} here~~
+#' @param verbose %% ~~Describe \code{verbose} here~~
+#' @param debug %% ~~Describe \code{debug} here~~
+#' @param from %% ~~Describe \code{from} here~~
+#' @param \dots %% ~~Describe \code{\dots} here~~
+#' @author Georges Monette
+#' @seealso \code{\link[base]{merge}}
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (x, y, by, all = T, dropdots = F, verbose = F, debug = T, 
+#'     from = F, ...) 
+#' {
+#'     help <- "This is a modification of merge that combines consistent variables\neven if not specified in 'by' to keep a common name.\n-- Some errors fixed Apr 24, 2007"
+#'     xm <- function(a, b, tofac = is.factor(a) || is.factor(b)) {
+#'         if (tofac) {
+#'             levs <- union(levels(b), levels(a))
+#'             a <- as.character(a)
+#'             b <- as.character(b)
+#'         }
+#'         b[is.na(b)] <- a[is.na(b)]
+#'         if (tofac) {
+#'             levs <- union(levs, unique(b))
+#'             b <- factor(b, levels = levs)
+#'         }
+#'         b
+#'     }
+#'     na2f <- function(x) {
+#'         x[is.na(x)] <- F
+#'         x
+#'     }
+#'     consistent <- function(a, b) {
+#'         if (is.factor(a)) 
+#'             a <- as.character(a)
+#'         if (is.factor(b)) 
+#'             b <- as.character(b)
+#'         !na2f(a != b)
+#'     }
+#'     if (from) {
+#'         xname <- deparse(substitute(x))
+#'         yname <- deparse(substitute(y))
+#'         x[[".F"]] <- rep("x", nrow(x))
+#'         y[[".F"]] <- rep("y", nrow(y))
+#'     }
+#'     xby <- x[, by, drop = F]
+#'     yby <- y[, by, drop = F]
+#'     xby$.file <- rep("x", nrow(xby))
+#'     yby$.file <- rep("y", nrow(yby))
+#'     by2 <- rbind(xby, yby)
+#'     if (verbose) 
+#'         cat("\nby in x and y:\n")
+#'     if (verbose) 
+#'         print(atotal(do.call("tab", by2), sum, "Total"))
+#'     nams <- union(names(x), names(y))
+#'     if (verbose) 
+#'         print(c(DimX = dim(x), DimY = dim(y)))
+#'     if (verbose) 
+#'         cat("\nVariables in both:\n")
+#'     if (verbose) 
+#'         print(intersect(names(x), names(y)))
+#'     if (verbose) 
+#'         cat("\nVariables in X only:\n")
+#'     if (verbose) 
+#'         print(setdiff(names(x), names(y)))
+#'     if (verbose) 
+#'         cat("\nVariables in Y only:\n")
+#'     if (verbose) 
+#'         print(setdiff(names(y), names(x)))
+#'     x$FromX <- 1:nrow(x)
+#'     y$FromY <- 1:nrow(y)
+#'     mm <- merge(x, y, by, all = T, ...)
+#'     newroots <- setdiff(intersect(names(x), names(y)), by)
+#'     if (verbose) 
+#'         cat("\nDimension of merged data frames:\n")
+#'     if (verbose) 
+#'         print(c(DimMerge = dim(mm)))
+#'     if (verbose) 
+#'         cat("\nNames of variables in merged data frame:\n")
+#'     if (verbose) 
+#'         print(names(mm))
+#'     if (F) {
+#'         dotx <- grep("\.x", names(mm), value = T)
+#'         if (verbose) 
+#'             print(c(dotx = dotx))
+#'         doty <- grep("\.y", names(mm), value = T)
+#'         if (verbose) 
+#'             print(c(doty = doty))
+#'         rootx <- substring(dotx, 1, nchar(dotx) - 2)
+#'         rooty <- substring(doty, 1, nchar(doty) - 2)
+#'         newroots <- intersect(rootx, rooty)
+#'     }
+#'     FromBoth <- !is.na(mm$FromX) & !is.na(mm$FromY)
+#'     Xonly <- !is.na(mm$FromX) & is.na(mm$FromY)
+#'     Yonly <- is.na(mm$FromX) & !is.na(mm$FromY)
+#'     if (verbose) 
+#'         cat("\nRows in:\n")
+#'     if (verbose) 
+#'         print(c(Both = sum(FromBoth), Xonly = sum(Xonly), Yonly = sum(Yonly)))
+#'     if (verbose) 
+#'         cat("\nThe following variables occur in both data frames:\n")
+#'     if (verbose) 
+#'         print(newroots)
+#'     drop.list <- character(0)
+#'     for (nn in newroots) {
+#'         nn.x <- paste(nn, ".x", sep = "")
+#'         nn.y <- paste(nn, ".y", sep = "")
+#'         mm[[nn]] <- xm(mm[[nn.x]], mm[[nn.y]])
+#'         if (all(same <- consistent(mm[[nn.x]], mm[[nn.y]]))) {
+#'             if (verbose) 
+#'                 cat("Variable ", nn, " is consistent\n")
+#'             drop.list <- c(drop.list, nn)
+#'         }
+#'         else {
+#'             if (verbose) 
+#'                 cat("Variable ", nn, " is inconsistent in the following rows:\n")
+#'             if (verbose) 
+#'                 print(mm[same, c(by, nn.x, nn.y, nn)])
+#'         }
+#'     }
+#'     if (dropdots) 
+#'         drop.list <- newroots
+#'     drop <- if (length(drop.list) > 0) {
+#'         c(paste(drop.list, "x", sep = "."), paste(drop.list, 
+#'             "y", sep = "."))
+#'     }
+#'     else character(0)
+#'     if (verbose) 
+#'         cat("\nDrop list:\n")
+#'     if (verbose) 
+#'         print(drop)
+#'     if (length(drop) > 0) {
+#'         if (verbose) 
+#'             print(c(drop = drop))
+#'         mm <- mm[, -match(drop, names(mm))]
+#'     }
+#'     onams <- 1:length(nams)
+#'     onams <- c(onams, onams + 0.1, onams + 0.2)
+#'     names(onams) <- c(nams, paste(nams, ".x", sep = ""), paste(nams, 
+#'         ".y", sep = ""))
+#'     keep <- intersect(names(sort(onams)), names(mm))
+#'     mm[, keep]
+#'   }
+#' 
+#' @export
 xmerge <- function(x, y, by , all = TRUE, dropdots = FALSE , verbose = FALSE, debug = TRUE, from = FALSE, ... ) {
     help <-
 "This is a modification of merge that combines consistent variables
@@ -3694,6 +8280,41 @@ if ( F ) {  # test xmerge
 }
 
 
+
+
+#' Intersection and symmetric differences of two sets
+#' 
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param A %% ~~Describe \code{A} here~~
+#' @param B %% ~~Describe \code{B} here~~
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (A, B) 
+#' {
+#'     if (is.factor(A)) 
+#'         A <- as.character(A)
+#'     if (is.factor(B)) 
+#'         B <- as.character(B)
+#'     ret <- list(`A and B` = intersect(A, B), `A - B` = setdiff(A, 
+#'         B), `B - A` = setdiff(B, A))
+#'     attr(ret, "N") <- sapply(ret, length)
+#'     ret
+#'   }
+#' 
+#' @export
 part <- function( A, B) {
    # partition two sets
 	if ( is.factor(A)) A <- as.character(A)
@@ -3710,8 +8331,72 @@ part <- function( A, B) {
 ###  Rbind to stack data and prediction frames
 ###
 
+
+
+#' Generic rbind that works on data frames
+#' 
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param x %% ~~Describe \code{x} here~~
+#' @param \dots %% ~~Describe \code{\dots} here~~
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (x, ...) 
+#' UseMethod("Rbind")
+#' 
+#' @export
 Rbind <- function(x, ...) UseMethod("Rbind")
 
+
+
+#' Rbind applied to data frames
+#' 
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param \dots %% ~~Describe \code{\dots} here~~
+#' @param vname %% ~~Describe \code{vname} here~~
+#' @param oname %% ~~Describe \code{oname} here~~
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (..., vname = ".which", oname = ".order") 
+#' {
+#'     z <- list(...)
+#'     for (ii in 1:length(z)) {
+#'         z[[ii]] <- as.data.frame(z[[ii]], stringsAsFactors = FALSE)
+#'         z[[ii]][, vname] <- rep(ii, nr <- nrow(z[[ii]]))
+#'         z[[ii]][, oname] <- 1:nr
+#'     }
+#'     ret <- z[[1]]
+#'     for (ii in 2:length(z)) ret <- merge(ret, z[[ii]], all = TRUE, 
+#'         sort = FALSE)
+#'     ret[order(ret[[vname]], ret[[oname]]), ]
+#'   }
+#' 
+#' @export
 Rbind.data.frame <-
 function( ... ,vname = '.which',oname = ".order") {
 
@@ -3742,6 +8427,35 @@ function( ... ,vname = '.which',oname = ".order") {
         ret [ order( ret[[vname]], ret[[oname]]),]
 }
 
+
+
+#' Rbind applied to lists
+#' 
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param x %% ~~Describe \code{x} here~~
+#' @param \dots %% ~~Describe \code{\dots} here~~
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (x, ...) 
+#' {
+#'     ret <- Rbind.data.frame(x, ...)
+#'     as.list(ret)
+#'   }
+#' 
+#' @export
 Rbind.list <- function(x,...) {
     ret <- Rbind.data.frame(x, ...)
     as.list(ret)
@@ -3853,6 +8567,7 @@ long <- function ( data , varying=NULL , sep.varying = "\\.", v.names = names(Va
 #   reshape(data, direction = 'long', sep = sep, varying = grep(sep, names(data),fixed=TRUE),...)
 # }
 
+#' @export
 tolong <- function(data, sep = "_", expand = FALSE, safe_sep = "#%@!",...){
   #
   # This creates a long file from a wide file is each variable name for a 'varying variable'
@@ -3901,14 +8616,120 @@ tolong <- function(data, sep = "_", expand = FALSE, safe_sep = "#%@!",...){
 ##  constant: to check whether something is constant
 ##
 
+
+
+
+
+#' Generic constant
+#' 
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param x %% ~~Describe \code{x} here~~
+#' @param \dots %% ~~Describe \code{\dots} here~~
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (x, ...) 
+#' UseMethod("constant")
+#' 
+#' @export
 constant <- function(x,...) UseMethod("constant")
 
+
+
+
+
+#' Default method to test whether a variable is constant
+#' 
+#' Default method to test whether a variable is constant %% ~~ A concise (1-5
+#' lines) description of what the function does. ~~
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param x %% ~~Describe \code{x} here~~
+#' @param na.rm %% ~~Describe \code{na.rm} here~~
+#' @param \dots %% ~~Describe \code{\dots} here~~
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (x, na.rm = F, ...) 
+#' {
+#'     if (na.rm) 
+#'         x <- na.omit(x)
+#'     length(unique(x)) <= 1
+#'   }
+#' 
+#' @export
 constant.default <- function(x, na.rm = FALSE,...) {
     if (na.rm) x <- na.omit(x)
     length(unique(x)) <= 1
 }
 
 
+
+
+
+
+#' Identify variables that are constant within levels of a factor %% ~~function
+#' to do ... ~~
+#' 
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param x %% ~~Describe \code{x} here~~
+#' @param id %% ~~Describe \code{id} here~~
+#' @param all %% ~~Describe \code{all} here~~
+#' @param \dots %% ~~Describe \code{\dots} here~~
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (x, id, all = FALSE, ...) 
+#' {
+#'     if (missing(id)) 
+#'         ret <- sapply(x, constant, ...)
+#'     else {
+#'         id <- eval(substitute(id), x, parent.frame())
+#'         if (inherits(id, "formula")) 
+#'             id <- c(model.frame(id, x))
+#'         ret <- sapply(x, function(xx) tapply(xx, id, constant, 
+#'             ...))
+#'         if (all) 
+#'             ret <- apply(ret, 2, all)
+#'     }
+#'     ret
+#'   }
+#' 
+#' @export
 constant.data.frame <- function( x, id  , all = FALSE , ...) {
    ## Description:    (G. Monette, June 13, 2005)
    ## check if values of variables are constant within levels of id
@@ -3932,6 +8753,45 @@ constant.data.frame <- function( x, id  , all = FALSE , ...) {
    ret
 }
 
+
+
+#' Identify level of aggregation at which a variable in invariant
+#' 
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param x %% ~~Describe \code{x} here~~
+#' @param form %% ~~Describe \code{form} here~~
+#' @param \dots %% ~~Describe \code{\dots} here~~
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (x, form, ...) 
+#' {
+#'     sel <- model.frame(form, x)
+#'     z <- list()
+#'     idx <- rep("", nrow(x))
+#'     z[[1]] <- constant(x, ...)
+#'     for (ii in 1:ncol(sel)) {
+#'         idx <- paste(idx, as.character(sel[[ii]]), sep = ";")
+#'         z[[ii + 1]] <- constant(x, idx, all = T, ...)
+#'     }
+#'     ret <- do.call("rbind", z)
+#'     ret <- length(z) - apply(ret * 1, 2, sum)
+#'     ret
+#'   }
+#' 
+#' @export
 varLevel <- function(x, form, ...) {
          ## Description:    (G. Monette, June 13, 2005)
          ## shows levels of each variable with respect to grouping formula
@@ -3956,38 +8816,102 @@ varLevel <- function(x, form, ...) {
         ret
 }
 
-if (FALSE) {
-        up <- function( dd, form , all = FALSE, keep = ncol(sel) ) {
-               ##
-               ## Replaced Nov 11, 2007  See below
-
-              ## Description:    (G. Monette, June 10, 2006)
-              ## Creates a higher level data set by selecting first
-              ## after ordering and keeping only invariant variables
-              ## To have summary variables they need to have been created
-              ## with, e.g., capply
-              sel <- model.frame( form , dd , na.action = na.include )
-              if( !all) vl <- varLevel( dd, form ) else vl <- rep(0,ncol(dd))
-              dd [ na.omit(sapply( split( 1:nrow(dd), sel ), function(x) x[1])), vl < keep + 1, drop = FALSE]
-        }
-
-
-        up <- function( dd, form , all = FALSE, keep = ncol(sel) ) {
-              ## Description:    (G. Monette, June 10, 2006)
-              ## Creates a higher level data set by selecting first
-              ## after ordering and keeping only invariant variables
-              ## To have summary variables they need to have been created
-              ## with, e.g., capply
-              #sel <- model.frame( form , dd , na.action = na.include )
-              #if( !all) vl <- varLevel( dd, form ) else vl <- rep(0,ncol(dd))
-              #dd [ na.omit(sapply( split( 1:nrow(dd), sel ), function(x) x[1])), vl < keep + 1, drop = FALSE]
-              require(nlme)
-
-              gsummary( dd, form = form, invariantsOnly = ! all )
-        }
-} # end of FALSE
-
-
+#' Create a data frame at a higher level of aggregation
+#' 
+#' Produce a higher level data set with one row per cluster. The data set can
+#' contain only variables that are invariant in each cluster or it can also
+#' include summaries (mean or modes) of variables that vary by cluster. Adapted
+#' from \code{gsummary} in the \code{nlme} package.
+#' 
+#' \code{up} was created from \code{nlme::gsummary} and modified to make it
+#' easier to use and to make an equivalent of \code{gsummary} available when
+#' using \code{lme4}.
+#' 
+#' @param object a data frame to be summarized.
+#' @param form a one-sided formula identifying the variable(s) in \code{object}
+#' that identifies clusters. e.g. ~ school/Sex to get a summary within each Sex
+#' of each school.
+#' @param all if TRUE, include summaries of variables that vary within
+#' clusters, otherwise keep only cluster-invariant variables.
+#' @param sep separator to form cluster names combining more than one
+#' clustering variables.  If the separator leads to the same name for distinct
+#' clusters (e.g. if var1 has levels 'a' and 'a/b' and var2 has levels 'b/c'
+#' and 'c') the function produces an error and a different separator should be
+#' used.
+#' @param FUN function to be used for summaries.
+#' @param omitGroupingFactor kept for compatibility with \code{gsummary}
+#' @param groups kept for compatibility with \code{gsummary}
+#' @param invariantsOnly kept for compatibility with \code{gsummary}
+#' @param \dots additional arguments to \code{tapply} when summarizing
+#' numerical variables. e.g. \code{na.rm = TRUE}
+#' @return a data frame with one row per value of the variable in \code{form}
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#'     data(hs)
+#'     dim( hs )
+#'     hsu <- up( hs, ~ school )
+#'     dim( hsu )
+#'     
+#'     # to also get cluster means of cluster-varying numeric variables and modes of factors:
+#' 
+#'     hsa <- up( hs, ~ school , all = TRUE )
+#' 
+#'     # to get summary proportions of cluster varying factors:
+#' 
+#'     up( cbind( hs, model.matrix( ~ Sex -1 , hs)), ~ school, all = T)
+#' 
+#' 
+#'     ## To plot a summary between-cluster panel along with within-cluster panels:
+#' 
+#'     hsu <- up( hs, ~ school, all = TRUE)
+#'     hsu$school <- ' between'  # space to make it come lexicographically before cluster names
+#' 
+#'     require( lattice )
+#'     xyplot( mathach ~ ses | school, rbind(hs,hsu),
+#'         panel = function( x, y, ...) {
+#'             panel.xyplot( x, y, ...)
+#'             panel.lmline( x, y, ...)
+#'         } )
+#' 
+#' 
+#' @export
+#         up <- function( dd, form , all = FALSE, keep = ncol(sel) ) {
+#                ##
+#                ## Replaced Nov 11, 2007  See below
+# 
+#               ## Description:    (G. Monette, June 10, 2006)
+#               ## Creates a higher level data set by selecting first
+#               ## after ordering and keeping only invariant variables
+#               ## To have summary variables they need to have been created
+#               ## with, e.g., capply
+#               sel <- model.frame( form , dd , na.action = na.include )
+#               if( !all) vl <- varLevel( dd, form ) else vl <- rep(0,ncol(dd))
+#               dd [ na.omit(sapply( split( 1:nrow(dd), sel ), function(x) x[1])), vl < keep + 1, drop = FALSE]
+#         }
+# 
+# 
+#         up <- function( dd, form , all = FALSE, keep = ncol(sel) ) {
+#               ## Description:    (G. Monette, June 10, 2006)
+#               ## Creates a higher level data set by selecting first
+#               ## after ordering and keeping only invariant variables
+#               ## To have summary variables they need to have been created
+#               ## with, e.g., capply
+#               #sel <- model.frame( form , dd , na.action = na.include )
+#               #if( !all) vl <- varLevel( dd, form ) else vl <- rep(0,ncol(dd))
+#               #dd [ na.omit(sapply( split( 1:nrow(dd), sel ), function(x) x[1])), vl < keep + 1, drop = FALSE]
+#               require(nlme)
+# 
+#               gsummary( dd, form = form, invariantsOnly = ! all )
+#         }
 up <-
   function ( object, form = formula(object),
              all = FALSE, sep = "/",
@@ -4100,62 +9024,6 @@ up <-
 
 
 
-###
-###  Row.names heading on data.frame
-###
-
-
-print.data.frame.lab <-    
-    function (x, ..., digits = NULL, quote = FALSE, right = TRUE) 
-    {
-        labs <- attributes(x)$labs
-        if (length(x) == 0) {
-            cat("NULL data frame with", length(row.names(x)), "rows\n")
-        }
-        else if (length(row.names(x)) == 0) {
-            print.default(names(x), quote = FALSE)
-            cat("<0 rows> (or 0-length row.names)\n")
-        }
-        else {
-            mat <- as.matrix(format.data.frame(x, digits = digits, 
-                na.encode = FALSE))
-            labs <- c(labs,"","")
-            labs <- labs[1:2]
-            names(dimnames(mat)) <- labs    
-            print(mat , ..., quote = quote, right = right)
-        }
-        invisible(x)
-    }
-
-"[.data.frame.lab" <- function(x, ...){
-    lab <- labs(x)
-    ret <- get("[.data.frame")(x,...)
-    if( inherits(ret, "data.frame")) labs(ret) <- lab
-    ret
-} 
-
-
-
-"labs<-" <- function(x,...) UseMethod("labs<-")
-
-"labs<-.data.frame" <- function( x, value ) {
-      value <- c( value, "", "") [ 1:2 ]
-      attr(x,"labs") <- value
-      if( !inherits(x,"data.frame.lab")) class(x) <- c( "data.frame.lab", class(x))
-      x
-  } 
-"labs<-.default" <- function(x, value) {
-      nd <- length(dim(x))
-      value <- c( value, rep("",nd))[1:nd]
-      names(dimnames(x)) <- value
-      x
-}
-
-labs <- function(x,...) UseMethod("labs")
-labs.data.frame.lab <- function( x ,...) attr(x,"labs")
-labs.default <- function(x,...) names(dimnames(x))
-
-
 
 ###
 ###  Trellis additions
@@ -4167,6 +9035,35 @@ labs.default <- function(x,...) names(dimnames(x))
 ###
 
 
+
+
+#' Transform selected values to NAs
+#' 
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param x %% ~~Describe \code{x} here~~
+#' @param val %% ~~Describe \code{val} here~~
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (x, val) 
+#' {
+#'     x[match(x, val, 0) > 0] <- NA
+#'     x
+#'   }
+#' 
+#' @export
 val2na <- function( x, val) {
 	## val2na(1:10, c(3,5))
 	## val2na(factor(c('a','b','b','c','a')), c('b','a'))
@@ -4177,19 +9074,63 @@ val2na <- function( x, val) {
 # zf <- factor(c('a','a','b',NA,'c','a',NA))
 
 
+
+
+#' Grep with value = T
+#' 
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param \dots %% ~~Describe \code{\dots} here~~
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (...) 
+#' grep(..., value = T)
+#' 
+#' @export
 grepv <- function(...) grep( ..., value = TRUE)
 
 # grepl <- function(pattern,x,...) match( 1:length(x) , grep(pattern,x,...), 0) >0
 
+#' @export
 p <- function(...) paste(..., sep ="")
 
+#' @export
 ch <- function(x) as.character(x)
 
+#' @export
 "%less%" <- function( a, b) setdiff(a,b)
+#' @export
 "%or%" <- function( a, b) union(a,b)
+
+
+
+
+#' Set operators
+#' 
+#' Set operations written as binary operators
+#' 
+#' @aliases %and% %less% %or%
+#' @param a,b vectors treated as sets
+#' @export
 "%and%" <- function( a, b) intersect( a, b)
 
 
+
+#' Library workaround for RDC
+#' 
+#' @export
 lib <- function(x) {
     xn <- deparse(substitute(x))
     if ( !do.call("require", list(as.name(xn))) ) {
@@ -4203,6 +9144,13 @@ lib <- function(x) {
 ###
 
 
+
+
+#' Read a SAS ODS file
+#' 
+#' @param file input file
+#' @param tfile
+#' @export
 sasin <- function(file, tfile = tempfile() ) {
 # moved to "/R/fun.R"
     help = "
@@ -4278,6 +9226,7 @@ stack <- function(...) {
 #####  anova.lme
 #####
 
+#' @export
 xanova.lme <- function (object, ..., test = TRUE, type = c("sequential", "marginal"),
     adjustSigma = TRUE, Terms, L, verbose = FALSE)
 {
@@ -4665,6 +9614,7 @@ oldtab.default = function( ..., total.margins = TRUE ) {
         ret
 }
 
+#' @export
 oldtab.data.frame = function( dd, fmla , total.margins = TRUE) {
      if ( missing( fmla )) return ( do.call('tab', as.list( dd , total.margins = total.margins)))
      xx = model.frame( fmla , dd , na.action = na.include)
@@ -4672,6 +9622,7 @@ oldtab.data.frame = function( dd, fmla , total.margins = TRUE) {
      do.call( 'tab', xx)
 }
 
+#' @export
 oldtab.formula <- function( fmla, dd, total.margins = TRUE, ...){
                tab( dd, fmla, total.margins = total.margins, ...)
 }
@@ -4696,25 +9647,6 @@ if (FALSE) {
 }
 
 
-if (FALSE) {
-# moved to fun.R and rewritten so it does not need nlme, otherwise
-# it can't be used with lme4
-up <- function( dd, form , all = F) {
-
-
-      ## Description:    (G. Monette, June 10, 2006)
-      ## Creates a higher level data set by selecting first
-      ## after ordering and keeping only invariant variables
-      ## To have summary variables they need to have been created
-      ## with, e.g., capply
-      #sel <- model.frame( form , dd , na.action = na.include )
-      #if( !all) vl <- varLevel( dd, form ) else vl <- rep(0,ncol(dd))
-      #dd [ na.omit(sapply( split( 1:nrow(dd), sel ), function(x) x[1])), vl < keep + 1, drop = F]
-      require(nlme)
-      if ( all == F ) gsummary( dd, form = form, invariantsOnly = TRUE )  else gsummary( dd, form = form)
-}
-}
-
 ###
 ###
 ###   ith derivative of an expression
@@ -4723,6 +9655,7 @@ up <- function( dd, form , all = F) {
 ###
 ###
 
+#' @export
 d <- function( ex, xv,i ) if ( i == 0) ex else D( d(ex, xv, i-1), xv)
 
 # Example
@@ -4748,7 +9681,48 @@ if (FALSE) {
 # recodes NAs as a value below the range of observed
 # values to produce 3-D marginal value plots
 
+#' @export
 misscode <- function(x,...) UseMethod('misscode')
+
+
+#' Turns NAs into a value below the range of non-missing data for plotting %%
+#' ~~function to do ... ~~
+#' 
+#' \code{misscode} turns NAs of numerical variables into a value slightly less
+#' that non-missing values. Missing values for factors are made into a
+#' non-missing level. When applied to a data frame, a new variable
+#' \code{.nmiss} is added to the data frame indicating the number of variables
+#' with missing data in each row of the data frame.
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @aliases misscode.default misscode.data.frame misscode.factor misscode
+#' @param x %% ~~Describe \code{x} here~~
+#' @param \dots %% ~~Describe \code{\dots} here~~
+#' @param offset %% ~~Describe \code{offset} here~~
+#' @note %% ~~further notes~~
+#' @author %% ~~who you are~~
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#' ##---- Should be DIRECTLY executable !! ----
+#' ##-- ==>  Define data, use random,
+#' ##--	or do  help(data=index)  for the standard data sets.
+#' 
+#' ## The function is currently defined as
+#' function (x, ..., offset = 0.1) 
+#' {
+#'     rr <- range(x, na.rm = TRUE)
+#'     vmiss <- min(x, na.rm = TRUE) - offset * diff(rr)
+#'     nas <- is.na(x)
+#'     x[nas] <- vmiss
+#'     attr(x, "nas") <- nas
+#'     x
+#'   }
+#' 
+#' @export
 misscode.default <- function(x,...,offset = .1) {
   rr <- range(x, na.rm = TRUE)
   vmiss <- min(x,na.rm = TRUE) - offset * diff(rr)
@@ -4757,12 +9731,14 @@ misscode.default <- function(x,...,offset = .1) {
   attr(x,'nas') <- nas
   x
 }
+#' @export
 misscode.factor <- function(x, ...) {
   nas <- is.na(x)
   x <- addNA(x, ifany = TRUE)
   attr(x,'nas') <- nas
   x
 }
+#' @export
 misscode.data.frame <- function(x,...) {
   x[] <- lapply(x[],misscode,...)
   isna <- lapply( x, function(x) attr(x,'nas'))

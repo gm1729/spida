@@ -1,4 +1,4 @@
-Package: spida
+Package: spida15
 Type: Package
 Title: Collection of miscellaneous functions for mixed models etc. prepared for SPIDA 2009+ (development version)
 Version: 0.1.3.9000
