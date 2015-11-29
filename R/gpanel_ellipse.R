@@ -1,14 +1,13 @@
 #' Lattice panel function for data ellipse
-#' 
-#' Draws a data ellipse in panels  
-#' 
-#' @param x 
+#'
+#' Draws a data ellipse in panels
+#'
+#' @param x
 #' @param y
-#' @param ... 
-#' 
+#' @param ...
+#'
 #' @return called for its side effects of plotting
 #' @examples
-library(spida)
 library(lattice)
 library(latticeExtra)
 # No groups or panels:
@@ -23,7 +22,7 @@ xyplot(mathach ~ ses | school, hs, groups = Sex) + glayer(gpanel.ellipse(...))
 gpanel.ellipse <-
 function(x, y, ..., type) {
   mat <- na.omit(cbind(x,y))
-  if( nrow(mat) < 3) return(NULL) 
+  if( nrow(mat) < 3) return(NULL)
   ell <- dell(mat)
   panel.xyplot(ell[,1], ell[,2], ..., type = 'l')
 }
