@@ -1,6 +1,7 @@
 Package: spida
 Type: Package
 Title: Collection of miscellaneous functions for mixed models etc. prepared for SPIDA 2009+ (development version)
+Version: 0.1.4.9999(devel)
 Date: 2015-11-29
 Author: Georges Monette
 Maintainer: Georges Monette <georges@yorku.ca>
