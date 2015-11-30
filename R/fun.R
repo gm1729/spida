@@ -170,10 +170,10 @@ Last uploaded to http://www.math.yorku.ca/~georges/R/fun.R : Auguest 23, 2006
 #' @param data
 #' @param form
 #' @param verbose
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -265,10 +265,10 @@ help   = "
 #' @param Z
 #' @param ip
 #' @param tol
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -314,10 +314,10 @@ ConjComp <- function( X , Z = diag( nrow(X)) , ip = diag( nrow(X)), tol = 1e-07 
 #' @param X
 #' @param Z
 #' @param tol
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -344,10 +344,10 @@ OrthoComp <- function (X, Z , tol = 1e-07) ConjComp( X, Z, tol = tol)
 #' @param y
 #' @param \dots
 #' @param verbose
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -411,10 +411,10 @@ oplot <- function( x, y, ..., verbose = TRUE) {
 #'
 #'
 #' @param x
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -450,10 +450,10 @@ fac <- function(x) {
 #'
 #' @param x
 #' @param head
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -495,10 +495,10 @@ disp <- function( x , head = deparse(substitute(x))) {
 #' @param df
 #' @param by
 #' @param \dots
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -550,10 +550,10 @@ function( df, by, ...) {
 #'
 #'
 #' @param x
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -591,10 +591,10 @@ na2f <- function(x)  {
 #'
 #'
 #' @param x
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -654,10 +654,10 @@ tfun <- function( x) {
 #'
 #' @param model
 #' @param \dots
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -761,10 +761,10 @@ if(help) {
 #' @param model
 #' @param variable
 #' @param \dots
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -850,10 +850,10 @@ av.frame.lm <- function (model, variable,...){
 #' objects, uses the code for the \code{lm} method for \code{lme} objects.
 #'
 #' @param mod
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -998,10 +998,10 @@ function (mod)
 #' parameter: e.g. \code{plot.symbol=list(cex=2,col='red')}. Particular useful
 #' for the cex, col, lty, lwd, alpha, pch parameters in plot.line and
 #' plot.symbol.
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -1367,8 +1367,8 @@ gd_ <- function(...) gd(superpose = FALSE, ...)
 #' The current version of the function could be made much simpler and more
 #' transparent. Some code is redundant.
 #' @author Georges Monette <georges@@yorku.ca>
-#' @seealso
-#' @references
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -1615,10 +1615,10 @@ Modifications:
 #'
 #'
 #' @param n
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -1723,10 +1723,10 @@ sampler <-
 #' @param col
 #' @param border
 #' @param \dots
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -1779,10 +1779,10 @@ pal <- function(col=c('blue','pink'), border = "light gray", ...) {
 #'
 #'
 #' @param pp
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -1839,10 +1839,10 @@ if ( FALSE ){
 #'
 #' @param x
 #' @param ll
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -1903,12 +1903,12 @@ change <- function(x,ll) {
 #' a \code{panel.subgroups} argument in the call to \code{xyplot} and it will
 #' be used to plot the groups. See the examples below.
 #' @param \dots any other arguments to be passed to the panel plotting function
-#' @note
-#' @author
+
+#' @author Georges Monette
 #' @seealso \code{link{lattice::panel.superpose}},
 #' \code{link{lattice::panel.superpose.2}}, \code{link{lattice::panel.xyplot}}
 #'
-#' @references
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -2005,11 +2005,11 @@ help = "Use help: ?panel.subgroups"
 #' @param FUN
 #' @param label
 #' @param \dots
-#' @note
-#' @author
+
+#' @author Georges Monette
 #' @seealso \code{\link{tab}}, \code{\link{acond}}
 #' \code{\link{help}}, ~~~
-#' @references
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -2110,10 +2110,10 @@ Modifications:
 #' @param ex
 #' @param xv
 #' @param i
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -2387,10 +2387,10 @@ Modifications:
 #'
 #'
 #' @param \dots
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -2533,10 +2533,10 @@ dellplus <- function( x, y,  ...) {
 #' @param lty
 #' @param add
 #' @param \dots
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -2789,10 +2789,10 @@ which must be plotted with plot(...,type='l') or lines(...)
 #'
 #' @param obj
 #' @param \dots
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -2819,10 +2819,10 @@ which must be plotted with plot(...,type='l') or lines(...)
 #'
 #' @param obj
 #' @param \dots
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -2865,12 +2865,12 @@ which must be plotted with plot(...,type='l') or lines(...)
 #' second family lines outside the first ellipse.
 #' @param range of values of \code{u} to use to generate points. (See the
 #' algorithm in the code)
-#' @note
+
 #' @author Georges Monette (georges@@yorku.ca)
-#' @seealso
+
 #' \code{\link{cell}}, \code{\link{dell}},
 #' \code{\link{ellplus}},\code{\link{dellplus}},
-#' @references
+
 #' @keywords ellipse ellipse geometry
 #' @examples
 #'
@@ -2968,10 +2968,10 @@ osculant.default <- function( center1, shape1, center2, shape2, n = 100, range =
 #'
 #'
 #' @param \dots
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -3050,10 +3050,10 @@ cell.wald <-
 #' @param lty
 #' @param add
 #' @param \dots
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -3158,10 +3158,10 @@ function (model, which.coef, levels = 0.95, Scheffe = FALSE, dfn = 2,
 #'
 #' @param x
 #' @param \dots
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -3191,10 +3191,10 @@ diags <- function(x, ...) UseMethod("diags")
 #' @param ask
 #' @param labels
 #' @param showlabs
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -3339,8 +3339,7 @@ diags.lm <- function(x, y, ..., ask, labels = names(residuals(x)), showlabs = te
 	n <- length(r)
 	r.o <- sort(r)
 	half <- (n + 1)/2
-	if(n
-    # n is odd
+	if (n%%2 == 1) {    # n is odd
 		med <- r.o[half]
 		below <- med - r.o[half:1]
 		above <- r.o[half:n] - med
@@ -3429,10 +3428,10 @@ model.frame.lme <- function (object, data =object$data, na.action = object$na.ac
 #'
 #'
 #' @param \dots
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -3484,10 +3483,10 @@ diags.lme <- function( ... ) cat("Being implemented")
 #' @param pch
 #' @param pop
 #' @param \dots
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -3600,10 +3599,10 @@ vplot    - plots the columns of a 2 x n matrix or a vector of length 2
 #'
 #'
 #' @param \dots
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -3626,10 +3625,10 @@ vell <- function(...) t( ell(...))
 #'
 #'
 #' @param \dots
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -3652,10 +3651,10 @@ vbox <- function(...) cbind( c(-1,-1), c(-1,1), c(1,1), c(1,-1), c(-1,-1))
 #'
 #'
 #' @param \dots
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -3683,10 +3682,10 @@ vobj <- function(...) {
 #'
 #'
 #' @param \dots
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -3710,10 +3709,10 @@ vsquare <- function(...) vmat( 0,0,0,1,1,1,1,0,0,0)
 #'
 #'
 #' @param \dots
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -3749,10 +3748,10 @@ vmat creates a matrix entering data column by column
 #'
 #'
 #' @param theta
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -3775,10 +3774,10 @@ orthog <- function( theta ) cbind( c( cos(theta), sin(theta)), c( - sin(theta), 
 #'
 #'
 #' @param x
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -3827,10 +3826,10 @@ orthog.proj <- function ( x ) {
 #' \code{x} here~~
 #' @return A character vector or factor with leading and trailing blanks
 #' removed.
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -3865,10 +3864,10 @@ trim in fun.R
 #'
 #'
 #' @param x
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -3897,10 +3896,10 @@ trim in fun.R
 #'
 #'
 #' @param x
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -3929,10 +3928,10 @@ trim in fun.R
 #'
 #'
 #' @param x
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -3962,10 +3961,10 @@ trim in fun.R
 #'
 #'
 #' @param x
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -3989,10 +3988,10 @@ trim in fun.R
 #'
 #'
 #' @param \dots
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -4024,10 +4023,10 @@ trim in fun.R
 #'
 #'
 #' @param \dots
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -4075,10 +4074,10 @@ help <- "
 #'
 #'
 #' @param \dots
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -4110,10 +4109,10 @@ help <- "
 #' @param dataframe
 #' @param file
 #' @param \dots
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -4290,9 +4289,9 @@ help <- "
 #' is a factor. This may be due to the need to process all factor levels for
 #' each cell. Turning \code{by} into a numeric or character vector improves
 #' speed: e.g. \code{capply( x, as.numeric(by), FUN)}.
-#' @author
-#' @seealso
-#' @references
+#' @author Georges Monette
+
+
 #' @keywords manip
 #' @examples
 #'
@@ -4490,10 +4489,10 @@ xapply <- function(x, ...) UseMethod("xapply")
 #' @param na.action determines whether to omit or include NAs in the grouping
 #' factors. Use \code{na.include} so NAs will form a distinct level. %%
 #' ~~Describe \code{na.action} here~~
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -4586,10 +4585,10 @@ xpandlist <- function ( x ) {
 #' @param q
 #' @param df
 #' @param mix
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -4625,10 +4624,10 @@ xpandlist <- function ( x ) {
 #'
 #'
 #' @param x
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -4655,10 +4654,10 @@ xpandlist <- function ( x ) {
 #'
 #' @param x
 #' @param \dots
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -4706,10 +4705,10 @@ xpandlist <- function ( x ) {
 #' @param by
 #' @param FUN
 #' @param \dots
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -4744,10 +4743,10 @@ xpandlist <- function ( x ) {
 #' @param by
 #' @param FUN
 #' @param \dots
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -4778,10 +4777,10 @@ xpandlist <- function ( x ) {
 #' @param by
 #' @param FUN
 #' @param \dots
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -4811,10 +4810,10 @@ xpandlist <- function ( x ) {
 #' @param x
 #' @param by
 #' @param \dots
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -4957,10 +4956,10 @@ cvars <- function(  x, by, ...) {
 #'
 #'
 #' @param x
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -4996,10 +4995,10 @@ na20 <- function(x) {
 #' @param weights
 #' @param normwt
 #' @param \dots
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -5318,10 +5317,10 @@ function (x, descript, exclude.missing = TRUE, digits = 4, weights = NULL,
 #'
 #'
 #' @param obj
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -5391,10 +5390,10 @@ summ.lmer <- function(x, ...) {
 #'
 #' @param x
 #' @param \dots
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -5424,10 +5423,10 @@ pr <- function(x,...) {
 #' @param x
 #' @param pre
 #' @param \dots
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -5470,10 +5469,10 @@ pr.default <- function(x,pre="\t",...) {
 #'
 #' @param x
 #' @param verbose
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -5541,10 +5540,10 @@ Q <- function(x, verbose = 0) {
 #'
 #'
 #' @param x
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -5863,10 +5862,10 @@ Vcov.rdc <- function( fit, L  = Lmat(fit,"") ) {
 #'
 #' @param fit
 #' @param L
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -5904,10 +5903,10 @@ Vcor.rdc <- function(fit, L = Lmat(fit,"")) {
 #'
 #'
 #' @param x
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -5956,10 +5955,10 @@ print.correl <- function(x) {
 #' @param help
 #' @param clevel
 #' @param debug
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -6123,10 +6122,10 @@ glh.rdc <- function(fit, Llist, help = FALSE, clevel = 0.95, debug = FALSE) {
 #'
 #' @param x
 #' @param \dots
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -6174,10 +6173,10 @@ glh.rdc <- function(fit, Llist, help = FALSE, clevel = 0.95, debug = FALSE) {
 #' @param x
 #' @param digits
 #' @param pdigits
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -6236,10 +6235,10 @@ formatCoefmat <- function(x ,digits = 6, pdigits = digits-1 ) {
 #' @param L
 #' @param cov
 #' @param \dots
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -6358,10 +6357,10 @@ print.glh.rdc <- function(x, round = 6, pround = round - 1, L  = TRUE, cov = TRU
 #'
 #' @param object
 #' @param \dots
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -6393,10 +6392,10 @@ xanova <- function(object,...) UseMethod("xanova")
 #' @param Llist
 #' @param df
 #' @param clevel
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -6497,10 +6496,10 @@ xanova.lmer <- function( fit, Llist , df = NULL, clevel = .95) {
 #'
 #'
 #' @param x
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -6556,10 +6555,10 @@ enc <- function(x) {
 #'
 #' @param x
 #' @param MARGIN
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -6613,10 +6612,10 @@ apct <- function(x,MARGIN=1) {
 #'
 #' @param x
 #' @param MARGIN
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -6656,10 +6655,10 @@ apct <- function(x,MARGIN=1) {
 #' @param df
 #' @param datafile
 #' @param codefile
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -6859,10 +6858,10 @@ td <- function( basecol = NULL, col = c(3,5,4,6,7,8,2), lty = 1:7,
 #' @param tofactor
 #' @param stop
 #' @param blanks
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -6939,10 +6938,10 @@ cap1 <- function(x, tofactor = is.factor(x),
 #' @param to
 #' @param x
 #' @param tofactor
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -7015,10 +7014,10 @@ tran <- function( from, to, x, tofactor = is.factor(x)) {
 #' @param x
 #' @param from
 #' @param to
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -7044,10 +7043,10 @@ tr <- function( x, from , to ) tran( from, to, x)
 #' @param from
 #' @param to
 #' @param x
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -7138,10 +7137,10 @@ abind.rdc <- function( arr1, arr2, d, facename = "") {
 #' @param FUN
 #' @param name
 #' @param \dots
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -7234,10 +7233,10 @@ atotal.rdc <- function( arr, FUN = sum, name = "Total",...) {
 #'
 #' @param fit
 #' @param \dots
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -7261,10 +7260,10 @@ atotal.rdc <- function( arr, FUN = sum, name = "Total",...) {
 #'
 #' @param fit
 #' @param \dots
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -7288,10 +7287,10 @@ atotal.rdc <- function( arr, FUN = sum, name = "Total",...) {
 #'
 #' @param fit
 #' @param \dots
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -7317,10 +7316,10 @@ atotal.rdc <- function( arr, FUN = sum, name = "Total",...) {
 #'
 #' @param fit
 #' @param \dots
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -7344,10 +7343,10 @@ atotal.rdc <- function( arr, FUN = sum, name = "Total",...) {
 #'
 #' @param x
 #' @param obj
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -7395,10 +7394,10 @@ atotal.rdc <- function( arr, FUN = sum, name = "Total",...) {
 #'
 #' @param x
 #' @param obj
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -7448,10 +7447,10 @@ atotal.rdc <- function( arr, FUN = sum, name = "Total",...) {
 #' @param lag
 #' @param at
 #' @param check
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -7571,11 +7570,11 @@ cLag <-
 #' then the returned value is \code{NA}.  To lag to the previous value of
 #' \code{time}, one can use \code{rank}.  Consider, also, \code{\link{cLagI}}
 #' that intrapolates backwards one unit of \code{time}.
-#' @note
-#' @author
+
+#' @author Georges Monette
 #' @seealso \code{\link{cLagI}}, \code{\link{cDiffI}}, \code{\link{capply}},
 #' \code{\link{up}}
-#' @references
+
 #' @keywords ~kwd1 ~kwd2
 #' @export
 Lag <- cLag # historical name that conflicts with Hmisc
@@ -7642,10 +7641,10 @@ cLagI <- function(x,id,time,lag=1,delta=.01,check=T) {
 #' \code{time} in the past.
 #' @param delta increment used for extrapolation
 #' @param check uniqueness of \code{id}/\code{time} combinations
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -7703,10 +7702,10 @@ cDiffI <- function(xx,...) {
 #'
 #' @param xx
 #' @param \dots
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -7799,10 +7798,10 @@ cs <- function(x, knots=quantile(x,pc), exclude = 0, pc = c(.25,.75))  {
 #' @param x
 #' @param order
 #' @param exclude
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -7903,10 +7902,10 @@ if (F) {
 #' @param \dots
 #' @param vname
 #' @param oname
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -8263,10 +8262,10 @@ if ( F ) {  # test xmerge
 #'
 #' @param A
 #' @param B
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -8314,10 +8313,10 @@ part <- function( A, B) {
 #'
 #' @param x
 #' @param \dots
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -8343,10 +8342,10 @@ Rbind <- function(x, ...) UseMethod("Rbind")
 #' @param \dots
 #' @param vname
 #' @param oname
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -8410,10 +8409,10 @@ function( ... ,vname = '.which',oname = ".order") {
 #'
 #' @param x
 #' @param \dots
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -8601,10 +8600,10 @@ tolong <- function(data, sep = "_", expand = FALSE, safe_sep = "#%@!",...){
 #'
 #' @param x
 #' @param \dots
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -8633,10 +8632,10 @@ constant <- function(x,...) UseMethod("constant")
 #' @param x
 #' @param na.rm
 #' @param \dots
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -8674,10 +8673,10 @@ constant.default <- function(x, na.rm = FALSE,...) {
 #' @param id
 #' @param all
 #' @param \dots
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -8737,10 +8736,10 @@ constant.data.frame <- function( x, id  , all = FALSE , ...) {
 #' @param x
 #' @param form
 #' @param \dots
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -8818,10 +8817,10 @@ varLevel <- function(x, form, ...) {
 #' @param \dots additional arguments to \code{tapply} when summarizing
 #' numerical variables. e.g. \code{na.rm = TRUE}
 #' @return a data frame with one row per value of the variable in \code{form}
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -9018,10 +9017,10 @@ up <-
 #'
 #' @param x
 #' @param val
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -9056,10 +9055,10 @@ val2na <- function( x, val) {
 #'
 #'
 #' @param \dots
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
@@ -9673,10 +9672,10 @@ misscode <- function(x,...) UseMethod('misscode')
 #' @param x
 #' @param \dots
 #' @param offset
-#' @note
-#' @author
-#' @seealso
-#' @references
+
+#' @author Georges Monette
+
+
 #' @keywords ~kwd1 ~kwd2
 #' @examples
 #'
