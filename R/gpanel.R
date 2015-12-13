@@ -136,3 +136,7 @@ fillin <- function(data, form, n = 200, xpd = 1.0) {
 #   xyplot( x ~ g|g2, fillin(zd, ~ x + g+g2, n =100),col='red')
 # 
 # as.data.frame(tab(zd, ~g))
+
+
+
+

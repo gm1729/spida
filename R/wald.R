@@ -13,7 +13,7 @@
 ## October 2, 2011:  modified 'wald' to better handle rank-deficient models
 ##                   previously columns of L and columns and rows of vcov
 ##                   corresponding to NAs in beta were deleted ignoring the
-##                   possibility that L beta is not estimable if any 
+##                   possibility that L beta is not estimable if any
 ##                   non-zero element of L multiplies an NA in beta.
 ##
 ## 2013 06 18: added df argument to wald to override denominator dfs. Useful
@@ -21,7 +21,7 @@
 ##             dfs are not appropriate.
 ##
 ## 2013 09 17: added getFix.multinom with df = Inf
-##                  
+##
 
 glh <- function( ...) wald( ...)    # previous name for 'wald' function
 
@@ -89,18 +89,18 @@ wald <- function(fit, Llist = "",clevel=0.95, data = NULL, debug = FALSE , maxro
 #          }
          ## Delete coefficients that are NA
          Ldata <- attr( L , 'data')
-         
+
          ## identify rows of L that are not estimable because they depend on betas that are NA
          Lna <- L[, is.na(beta), drop = FALSE]
          narows <- apply(Lna,1, function(x) sum(abs(x))) > 0
-         
+
          L <- L[, !is.na(beta),drop = FALSE]
          attr(L,'data') <- Ldata
          beta <- beta[ !is.na(beta) ]
-         
+
          ## Anova
          if( method == 'qr' ) {
-             qqr <- qr(t(na.omit(L)))     
+             qqr <- qr(t(na.omit(L)))
              #Qqr <- Q(t(L))
              L.rank <- qqr$rank
              #L.rank <- attr(Qqr,'rank')
@@ -113,7 +113,7 @@ wald <- function(fit, Llist = "",clevel=0.95, data = NULL, debug = FALSE , maxro
 #              if(debug)disp( t(na.omit(t(L))))
 #              sv <- svd( t(na.omit(t(L))) , nu = 0 )
              sv <- svd( na.omit(L) , nu = 0 )
- 
+
               if(debug)disp( sv )
              tol.fac <- max( dim(L) ) * max( sv$d )
              if(debug)disp( tol.fac )
@@ -125,7 +125,7 @@ wald <- function(fit, Llist = "",clevel=0.95, data = NULL, debug = FALSE , maxro
              if(debug)disp( t(sv$v))
              L.full <- t(sv$v)[seq_len(L.rank),,drop = FALSE]
          } else stop("method not implemented: choose 'svd' or 'qr'")
-         
+
          # from package(corpcor)
          # Note that the definition tol= max(dim(m))*max(D)*.Machine$double.eps
          # is exactly compatible with the conventions used in "Octave" or "Matlab".
@@ -140,7 +140,7 @@ wald <- function(fit, Llist = "",clevel=0.95, data = NULL, debug = FALSE , maxro
 
          if (debug) disp(L.full)
          if (debug) disp( vc )
-         
+
          vv <-  L.full %*% vc %*% t(L.full)
          eta.hat <- L.full %*% beta
          Fstat <- (t(eta.hat) %*% qr.solve(vv,eta.hat,tol=1e-10)) / L.rank
@@ -163,7 +163,7 @@ wald <- function(fit, Llist = "",clevel=0.95, data = NULL, debug = FALSE , maxro
          }
 
          denDF <- apply( L , 1 , function(x,dfs) min( dfs[x!=0]), dfs = dfs)
-         
+
          aod <- cbind( Estimate=c(etahat),
              Std.Error = etasd,
              DF = denDF,
@@ -202,6 +202,198 @@ wald <- function(fit, Llist = "",clevel=0.95, data = NULL, debug = FALSE , maxro
   attr(ret,"class") <- "wald"
   ret
 }
+
+
+wald2 <- function(fit, Llist = "",clevel=0.95, data = NULL, debug = FALSE , maxrows = 25,
+                 full = FALSE, fixed = FALSE, invert = FALSE, method = 'svd',df = NULL, RHS = 0) {
+#' GM: 2015 08 11:  to do:
+#'  Experimental version of wald with RHS
+#' NEEDS to be restructured with
+#' 1. printing must show RHS
+#' 2. needs to work with a list as second argument
+#' 3. should redo handling of list so RHS is in list and so
+#'    list handing is outside main function
+#'
+
+    if (full ) return( wald ( fit, model.matrix(fit)))
+  dataf <- function(x,...) {
+    x <- cbind(x)
+    rn <- rownames(x)
+    if( length( unique(rn)) < length(rn)) rownames(x) <- NULL
+    data.frame(x,...)
+  }
+  as.dataf <- function(x,...) {
+    x <- cbind(x)
+    rn <- rownames(x)
+    if( length( unique(rn)) < length(rn)) rownames(x) <- NULL
+    as.data.frame(x,...)
+  }
+
+  unique.rownames <- function(x) {
+    ret <- c(tapply(1:length(x), x , function(xx) {
+      if ( length(xx) == 1) ""
+      else 1:length(xx)
+    })) [tapply(1:length(x),x)]
+    ret <- paste(x,ret,sep="")
+    ret
+  }
+  #      if(debug) disp( Llist)
+  if( is.character(Llist) ) Llist <- structure(list(Llist),names=Llist)
+  if(!is.list(Llist)) Llist <- list(Llist)
+
+  ret <- list()
+  fix <- getFix(fit)
+  #      if(debug) disp(fix)
+  beta <- fix$fixed
+  vc <- fix$vcov
+
+  dfs <- if(is.null(df) ) fix$df else df + 0*fix$df
+  #      if(debug) disp(Llist)
+  for (ii in 1:length(Llist)) {
+    ret[[ii]] <- list()
+    Larg <- Llist[[ii]]
+    #          if(debug) {
+    #               disp(ii)
+    #               disp(Larg)
+    #          }
+    L <- NULL
+    if ( is.character(Larg)) {
+      L <- Lmat(fit,Larg, fixed = fixed, invert = invert)
+    } else {
+      if ( is.numeric(Larg)) {
+        if ( is.null(dim(Larg))) {
+          if(debug) disp(dim(Larg))
+          if ( (length(Larg) < length(beta)) && (all(Larg>0)||all(Larg<0)) ) {
+            L <- diag(length(beta))[Larg,]
+            dimnames(L) <- list( names(beta)[Larg], names(beta))
+          } else L <- rbind( Larg )
+        }
+        else L <- Larg
+      }
+    }
+    #          if (debug) {
+    #             disp(Larg)
+    #             disp(L)
+    #          }
+    ## Delete coefficients that are NA
+    Ldata <- attr( L , 'data')
+
+    ## identify rows of L that are not estimable because they depend on betas that are NA
+    Lna <- L[, is.na(beta), drop = FALSE]
+    narows <- apply(Lna,1, function(x) sum(abs(x))) > 0
+
+    L <- L[, !is.na(beta),drop = FALSE]
+    attr(L,'data') <- Ldata
+    beta <- beta[ !is.na(beta) ]
+
+    ## Anova
+    if( method == 'qr' ) {
+      qqr <- qr(t(na.omit(L)))
+      #Qqr <- Q(t(L))
+      L.rank <- qqr$rank
+      #L.rank <- attr(Qqr,'rank')
+      #L.miss <- attr(Qqr,'miss')
+      if(debug)disp( t( qr.Q(qqr)))
+      L.full <- t(qr.Q(qqr))[ 1:L.rank,,drop=FALSE]
+      #L.full <- t(Qqr[!L.miss,])[ 1:L.rank,,drop=F]
+    } else if ( method == 'svd' ) {
+      if(debug) disp(L)
+      #              if(debug)disp( t(na.omit(t(L))))
+      #              sv <- svd( t(na.omit(t(L))) , nu = 0 )
+      sv <- svd( na.omit(L) , nu = 0 )
+
+      if(debug)disp( sv )
+      tol.fac <- max( dim(L) ) * max( sv$d )
+      if(debug)disp( tol.fac )
+      if ( tol.fac > 1e6 ) warning( "Poorly conditioned L matrix, calculated numDF may be incorrect")
+      tol <- tol.fac * .Machine$double.eps
+      if(debug)disp( tol )
+      L.rank <- sum( sv$d > tol )
+      if(debug)disp( L.rank )
+      if(debug)disp( t(sv$v))
+      L.full <- t(sv$v)[seq_len(L.rank),,drop = FALSE]
+    } else stop("method not implemented: choose 'svd' or 'qr'")
+
+    # from package(corpcor)
+    # Note that the definition tol= max(dim(m))*max(D)*.Machine$double.eps
+    # is exactly compatible with the conventions used in "Octave" or "Matlab".
+
+
+    if (debug && method == "qr") {
+      disp(qqr)
+      disp(dim(L.full))
+      disp(dim(vc))
+      disp(vc)
+    }
+
+    if (debug) disp(L.full)
+    if (debug) disp( vc )
+
+    vv <-  L.full %*% vc %*% t(L.full)
+    eta.hat <- L.full %*% beta
+    Fstat <- (t(eta.hat) %*% qr.solve(vv,eta.hat,tol=1e-10)) / L.rank
+    included.effects <- apply(L,2,function(x) sum(abs(x),na.rm=TRUE)) != 0
+    denDF <- min( dfs[included.effects])
+    numDF <- L.rank
+    ret[[ii]]$anova <- list(numDF = numDF, denDF = denDF,
+                            "F-value" = Fstat,
+                            "p-value" = pf(Fstat, numDF, denDF, lower.tail = FALSE))
+    ## Estimate
+    etahat <- L %*% beta-RHS
+    # NAs if not estimable:
+    etahat[narows] <- NA
+    if( nrow(L) <= maxrows ) {
+      etavar <- L %*% vc %*% t(L)
+      etasd <- sqrt( diag( etavar ))
+    } else {
+      etavar <- NULL
+      etasd <- sqrt( apply( L * (L%*%vc), 1, sum))
+    }
+
+    denDF <- apply( L , 1 , function(x,dfs) min( dfs[x!=0]), dfs = dfs)
+
+    aod <- cbind( Estimate=c(etahat),
+                  Std.Error = etasd,
+                  DF = denDF,
+                  "t-value" = c(etahat/etasd),
+                  "p-value" = 2*pt(abs(etahat/etasd), denDF, lower.tail =FALSE))
+    colnames(aod)[ncol(aod)] <- 'p-value'
+    if (debug ) disp(aod)
+    if ( !is.null(clevel) ) {
+      #print(aod)
+      #print(aod[,'DF'])
+      #print(aod[,'etasd'])
+      hw <- qt(1 - (1-clevel)/2, aod[,'DF']) * aod[,'Std.Error']
+      #print(hw)
+      aod <- cbind( aod, LL = aod[,"Estimate"] - hw, UL = aod[,"Estimate"] + hw)
+      #print(aod)
+      if (debug ) disp(colnames(aod))
+      labs <- paste(c("Lower","Upper"), format(clevel))
+      colnames(aod) [ ncol(aod) + c(-1,0)] <- labs
+    }
+    if (debug ) disp(rownames(aod))
+    aod <- as.dataf(aod)
+
+    rownames(aod) <- rownames(as.dataf(L))
+    labs(aod) <- names(dimnames(L))[1]
+    ret[[ii]]$estimate <- aod
+    ret[[ii]]$coef <- c(etahat)
+    ret[[ii]]$vcov <- etavar
+    ret[[ii]]$RHS <- RHS
+    ret[[ii]]$L <- L
+    ret[[ii]]$se <- etasd
+    ret[[ii]]$L.full <- L.full
+    ret[[ii]]$L.rank <- L.rank
+    if( debug ) disp(attr(Larg,'data'))
+    ret[[ii]]$data <- attr(Larg,'data')
+  }
+  names(ret) <- names(Llist)
+  attr(ret,"class") <- "wald"
+  ret
+}
+
+
+
 
 print.wald <- function(x,round = 6, pround = 5,...) {
     pformat <- function(x, digits = pround) {
@@ -358,7 +550,7 @@ getFix.gls <- function(fit,...) {
 
 
 getFix.lmer <- function(fit,...) {
-  # 2014 06 04: changed fit@fixef to fixef(fit)     
+  # 2014 06 04: changed fit@fixef to fixef(fit)
   ret <- list()
        ret$fixed <- fixef(fit)
        ret$vcov <- as.matrix( vcov(fit) )
@@ -368,8 +560,8 @@ getFix.lmer <- function(fit,...) {
 }
 
 getFix.glmer <- function(fit,...) {
-  # 2014 06 04: changed fit@fixef to fixef(fit)     
-  
+  # 2014 06 04: changed fit@fixef to fixef(fit)
+
   ret <- list()
        ret$fixed <- fixef(fit)
        ret$vcov <- as.matrix(vcov(fit))
@@ -380,8 +572,8 @@ getFix.glmer <- function(fit,...) {
 
 
 getFix.mer <- function(fit,...) {
-  # 2014 06 04: changed fit@fixef to fixef(fit)     
-  
+  # 2014 06 04: changed fit@fixef to fixef(fit)
+
        ret <- list()
        ret$fixed <- fixef(fit)
        ret$vcov <- as.matrix(vcov(fit))
@@ -399,10 +591,10 @@ getFix.zeroinfl <- function(fit,...){
        ret
 }
 
-getFix.mipo <- function( fit, ...){ 
+getFix.mipo <- function( fit, ...){
   # pooled multiple imputation object in mice
   # uses the minimal df for components with non-zero weights
-  # -- this is probably too conservative and should 
+  # -- this is probably too conservative and should
   # improved
   ret <- list()
   ret$fixed <- fit$qbar
@@ -490,7 +682,7 @@ print.cat <- function(object,...) {
     invisible(object)
 }
 
-# 
+#
 Lform <- function( fit, form, data = getData(fit)) {
  # 2011-12-01: replaced with version below
       if (missing(form)) return ( Lcall(fit))
@@ -521,7 +713,7 @@ Lform <- function( fit, form, data = getData(fit)) {
 
 # 2012 12 04
 # Plan for Lform
-# 
+#
 
 # 2012 12 05: Lform becomes Lex to acknowledge the fact that it uses
 # expressions instead of formulas
@@ -635,7 +827,7 @@ Ldiff <- function( fit, pat, levnames = c(reflevel,substring(rownames(L),cut+1))
       rownames(Lret) <- rn
       Lret
 }
- 
+
 
 
 Lmu <- function(fit, nam, verbose = 0) {
