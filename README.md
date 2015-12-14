@@ -1,11 +1,9 @@
 # spida
 
-R package collection of tools for hierarchical and longitudinal data analysis. The package was developed to support the Summer Programme in Data Analysis offered at York University from 2000 to 2013. 
+R package collection of tools for hierarchical and longitudinal data analysis. The package was originally developed to support the Summer Programme in Data Analysis offered at York University from 2000 to 2012. 
 
 The package is being revised and changes are available in the 'spidanew' package. Until 'spidanew' is merged into 'spida' it is
 recommended that you install both and load 'spidanew' after 'spida'.
-
-Version 0.1.0
 
 ## Installation
 
