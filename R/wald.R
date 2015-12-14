@@ -955,7 +955,6 @@ getFix.zeroinfl <- function(fit,...){
 
 #' @export
 getFix.mipo <- function( fit, ...){
->>>>>>> devel
   # pooled multiple imputation object in mice
   # uses the minimal df for components with non-zero weights
   # -- this is probably too conservative and should
