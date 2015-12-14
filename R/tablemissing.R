@@ -1,4 +1,42 @@
 # @param zoom (=FALSE). Should first category, showing proportions of complete data, have its bar on the right scaled down. (NOT YET IMPLEMENTED)
+
+
+#' Tabulate and visualize missing values
+#' 
+#' Tabulates missing values in variables and patterns of missing values among
+#' variables. It produces a missing value plot displaying different patterns of
+#' missing values among variables and missing value counts.
+#' 
+#' This function tabulates the missing values in variables and the patterns of
+#' missings. The input data should be of class matrix or dataframe. The
+#' function also displays a missing value plot. Each row represents a pattern
+#' of missings, where the variables with missing values are shown in yellow.
+#' The barchart below shows the proportions of missing values by variable. The
+#' barchart on the right displays the pattern frequencies. This barchart uses
+#' the concept of censored zooming. The topmost bar, representing no missing
+#' values in any variable, is likely to be much larger than the others and will
+#' then not be drawn to scale, but bordered in red to show this. Ordering of
+#' variables and patterns of missings based on counts can be very useful for
+#' exploring the structure of missings in a dataset.
+#' 
+#' @param x the dataset to be examined. It should be of class matrix or
+#' dataframe.
+#' @param sortby a logical value indicating whether the variables, patterns or
+#' both are sorted by the numbers of missing values. Possible values are
+#' "variable" (sort by variable name), "row" (sort by pattern counts), "column"
+#' (sort by variable counts) and "both" (sort by variable and pattern counts).
+#' @return 
+#' \item{finaltable }{A table of class dataframe containing number of missing
+#' values in variable and missing pattern}
+#' @author Waqas Ahmed Malik
+#' @keywords missing values plot
+#' @examples
+#' 
+#' data(adult, package="vmv")
+#' tablemissing(adult, sortby="variable")
+#' 
+#' 
+#' @export
 tablemissing <-
   function (x, sortby="variable", bot = 6, mar = c(bot,1,1.5,1),
             adj=c(0,-.1), xpd=TRUE, srt = -60, cex = .8, zoom = FALSE, ...)
@@ -131,9 +169,3 @@ tablemissing <-
   }
 
 
-##   Test
-
-zd <- data.frame( x=1:10, y=1:10, z= 1:10)
-zd[rbind(c(1,1),c(1,2),c(1,3), c(2,1),c(3,1),c(4,1),c(5,2))]<-NA
-zd
-tablemissing(zd)

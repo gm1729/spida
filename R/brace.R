@@ -1,6 +1,40 @@
 # revised by MF to replace Splus calls 7/19/2010
 # (removed brace from fun.R)
 
+
+
+
+
+#' Create a brace for a graph
+#' 
+#' The function \code{brace()} calculates the (X,Y) coordinates to draw a brace
+#' between two points in a graph.
+#' 
+#' 
+#' @param x1,y1 Coordinate of the initial point for the brace
+#' @param x2,y2 Coordinate of the final point for the brace
+#' @param right Logical to indicate if a vertical brace should have its'
+#' central point facing right. If the brace is horizontal (\code{y1 == y2}),
+#' "right" means "down"
+#' @param rad Radius of the quarter circles used to draw the brace
+#' @return A 2-column matrix of (X,Y) points, suitable for use with
+#' \code{lines}
+#' @author Georges Monette, modified for R by Michael Friendly
+#' @seealso \code{\link[graphics]{lines}}, \code{\link[graphics]{arrows}}, ~~~
+#' @keywords dplot aplot
+#' @examples
+#' 
+#' plot(c(-1,1), c(-1,1), type="n", xlab="x", ylab="y")
+#' abline(h=0, col="gray")
+#' abline(v=0, col="gray")
+#' b <- 0.6
+#' abline(0, b, col="blue")
+#' lines(brace(0, 0, 0, b, right=FALSE, rad=0.1))
+#' lines(brace(0, 0, 1, 0, rad=0.1))
+#' text(0.5, -.2, '1', cex=2)
+#' text(-.2, b/2, 'b', cex=2)
+#' 
+#' @export
 brace <- function (x1 = 0, y1 = 0, x2 = 0, y2 = 1, right = TRUE, rad = 0.2) 
 {
 #   uin only in Splus

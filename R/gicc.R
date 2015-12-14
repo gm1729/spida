@@ -3,6 +3,51 @@
 # Date: January 3, 2011
 # Package: spida
 
+
+
+#' Generalized intraclass correlation coefficient for multilevel data %%
+#' ~~function to do ... ~~
+#' 
+#' \code{gicc} facilitates the identification of between-subject variables
+#' versus balanced within-subject variables with hierarchical data. Methods
+#' handle factors, character variables and numerical variables. For categorical
+#' variables, Goodman-Kruskal's tau is returned and for numerical variables,
+#' the simple ICC with (variance between) / (variance between + variance
+#' within) applied to the rank (by default) of the variable. In either case, a
+#' value of 1 signifies a variable that is constant within clusters and a value
+#' of 0, a variable that is perfectly balanced within clusters. %% ~~ A concise
+#' (1-5 lines) description of what the function does. ~~
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @aliases gicc gicc.default gicc.data.frame gicc.factor
+#' @param x a data frame, factor, character variable or a numerical variable %%
+#' ~~Describe \code{x} here~~
+#' @param by if \code{x} is a data frame, \code{by} can be a formula (e.g.
+#' \code{~id}) evaluated in \code{x}. Otherwise, \code{by} is a variable
+#' defining clusters. %% ~~Describe \code{by} here~~
+#' @param method a character string indicating whether to work with the rank of
+#' the raw variable, \code{x}, stripped of missing values, with the raw
+#' variable itself, or with \code{is.na(x)}. Can be one of "rank", raw" or
+#' "na".
+#' 
+#' %% ~~Describe \code{method} here~~
+#' @param \dots -- not used %% ~~Describe \code{\dots} here~~
+#' @return a measure of relative variability within clusters so that 1
+#' represents no variability and 0 perfect balance. %% ~Describe the value
+#' returned %% If it is a LIST, use %% \item{comp1 }{Description of 'comp1'} %%
+#' \item{comp2 }{Description of 'comp2'} %% ...
+#' @note %% ~~further notes~~
+#' @author G. Monette <georges@@yorku.ca>
+#' @seealso %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' @references %% ~put references to the literature/web site here ~
+#' @keywords ~kwd1 ~kwd2
+#' @examples
+#' 
+#'   gicc( hs, ~ school)
+#'   gicc( hs, ~ school, method = 'raw')
+#' 
+#' @export
 gicc <- function(x, by, method,  ...) {
 
   # Computes a 'generalized intra-class correlation coefficient' using
@@ -23,6 +68,7 @@ gicc <- function(x, by, method,  ...) {
 }
 
 
+#' @export
 gicc.factor <- function( x, by, method , ...) {
   # See generic function for description
    Verppr <- function( x ) {    # probability of error with proportional prediction rule
@@ -44,6 +90,7 @@ gicc.factor <- function( x, by, method , ...) {
    (marg.perror - cond.perror)/marg.perror
 }
 
+#' @export
 gicc.default <- function(x, by, method = 'rank', ...) {
 # intraclass correlation based on ranks to reduce influence of outliers
 # perhaps we should use normal quantiles
@@ -64,6 +111,7 @@ gicc.default <- function(x, by, method = 'rank', ...) {
    var.bet/(var.bet+var.within)
 }
 
+#' @export
 gicc.data.frame <- function(x, by, method = 'rank', ...) {
 # intraclass correlation based on ranks to reduce influence of outliers
 # perhaps we should use normal quantiles

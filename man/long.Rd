@@ -22,9 +22,9 @@ long(data, sep = "_",...)
 }
   \item{sep}{ (default "_" in 'tolong")
 the separator between the long variable name and the time
-}  
+}
 \item{expand}{ (default FALSE in 'tolong')
-if TRUE and if there are missing combinations of long variable names and times, the missing combinations are created with NAs 
+if TRUE and if there are missing combinations of long variable names and times, the missing combinations are created with NAs
 }
   \item{varying}{
 %%     ~~Describe \code{varying} here~~
@@ -86,26 +86,27 @@ if TRUE and if there are missing combinations of long variable names and times, 
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
+\dontrun{
 ##---- Should be DIRECTLY executable !! ----
 ##-- ==>  Define data, use random,
 ##--	or do  help(data=index)  for the standard data sets.
 
 ## The function is currently defined as
-function (data, varying = NULL, sep.varying = "\\.", v.names = names(Varying), 
-    timevar = "time", idvar = "id", ids = 1:NROW(data), times = seq(length = length(Varying[[1]])), 
-    drop = NULL, new.row.names = NULL, split = list(regexp = "\\.", 
-        include = FALSE), debug = FALSE) 
+function (data, varying = NULL, sep.varying = "\\.", v.names = names(Varying),
+    timevar = "time", idvar = "id", ids = 1:NROW(data), times = seq(length = length(Varying[[1]])),
+    drop = NULL, new.row.names = NULL, split = list(regexp = "\\.",
+        include = FALSE), debug = FALSE)
 {
     help <- "\n    Example:   long(dwl, varying = c('wmrss', 'lm1tot','lm2tot'), sep='')\n    "
     nn <- names(data)
-    if (debug) 
+    if (debug)
         disp(nn)
     Varying <- list()
     for (ii in 1:length(varying)) {
         if (length(prefix <- varying[[ii]]) == 1) {
-            ns <- grep(paste("^", prefix, sep.varying, sep = ""), 
+            ns <- grep(paste("^", prefix, sep.varying, sep = ""),
                 nn, value = T)
-            if (debug) 
+            if (debug)
                 disp(ns)
             Varying[[ii]] <- ns
             names(Varying)[ii] <- prefix
@@ -115,12 +116,12 @@ function (data, varying = NULL, sep.varying = "\\.", v.names = names(Varying),
             names(Varying)[ii] <- names(varying)[ii]
         }
     }
-    if (debug) 
+    if (debug)
         disp(Varying)
-    if (debug) 
+    if (debug)
         disp(times)
-    ret <- stats::reshape(data, Varying, v.names, timevar, idvar, 
-        ids, times, drop, direction = "long", new.row.names, 
+    ret <- stats::reshape(data, Varying, v.names, timevar, idvar,
+        ids, times, drop, direction = "long", new.row.names,
         split)
     ret[order(ret[[idvar]], ret[[timevar]]), ]
   }
@@ -129,8 +130,8 @@ function (data, varying = NULL, sep.varying = "\\.", v.names = names(Varying),
 
 tolong <- function(data, sep = "_",...){
   reshape(data, direction = 'long', sep = sep, varying = grep(sep, names(data)),...)
-} 
-
+}
+}
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
